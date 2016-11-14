@@ -188,7 +188,6 @@ def poll() {
 }
 
 def refresh() {
-    log.debug "number: $number"
 	delayBetween([
 		zwave.switchBinaryV1.switchBinaryGet().format(),
 		zwave.meterV2.meterGet(scale: 0).format(),
@@ -203,9 +202,13 @@ def reset() {
 	]
 }
 
+def updated() {
+response(configure())
+}
+
 def configure() {
 
-	log.debug "Send Configuration to device"
+	log.debug "Sending Configuration to device"
 	delayBetween([   
         zwave.configurationV1.configurationSet(parameterNumber: 40, size: 1, scaledConfigurationValue: par40.toInteger()).format(),    // Immediate power report. Available settings: 1 - 100 (%). Default 80
         zwave.configurationV1.configurationSet(parameterNumber: 42, size: 1, scaledConfigurationValue: par42.toInteger()).format(), 	// Standard power reporting. Available settings: 1 - 100 (%). Default 15
@@ -214,5 +217,5 @@ def configure() {
         zwave.associationV1.associationSet(groupingIdentifier:1, nodeId:[zwaveHubNodeId]).format(),
         zwave.associationV1.associationSet(groupingIdentifier:2, nodeId:[zwaveHubNodeId]).format(),
         zwave.associationV1.associationSet(groupingIdentifier:3, nodeId:[zwaveHubNodeId]).format(),
-	])
+	], 1500)
 }
