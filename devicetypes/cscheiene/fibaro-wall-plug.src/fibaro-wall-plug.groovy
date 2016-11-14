@@ -91,10 +91,10 @@ metadata {
         "Available settings: 1 - 254 (s) Default 30"
         
         input name: "par61", type: "number", description: "Enter number", required: true,
-        title: "LED Ring\n\n" +
+        title: "LED ring illumination colour when device is on\n\n" +
         "Available settings:\n" +
-        "0 - No change in colour. LED ring illumination colour determined by parameters 61 or 62 settings\n" +
-        "1 - LED ring flashes red / blue / white (default)\n" +
+        "0 - LED ring illumination colour changes in predefined steps, depending on power consumption changes\n" +
+        "1 - LED ring illumination colour changes continuously, using full spectrum of available colorus, depending on power consumption changes(default)\n" +
         "2 - White illumination\n" +
 		"3 - Red illumination\n" +
 		"4 - Green illumination\n" +
