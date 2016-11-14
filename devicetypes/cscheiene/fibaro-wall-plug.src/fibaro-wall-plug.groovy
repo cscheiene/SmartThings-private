@@ -77,7 +77,33 @@ metadata {
 		details(["switch","energy","power","refresh","reset","configure"])  
         //details(["switch","energy","reset","refresh","configure"])
 	}
-
+    preferences {
+        input name: "par40", type: "number", description: "Enter number", required: true,
+        title: "Immediate power report\n\n" +
+        "Available settings: 1 - 100 (%). Default 80"
+                
+        input name: "par42", type: "number", description: "Enter number", required: true,
+        title: "Standard power reporting\n\n" +
+        "Available settings: 1 - 100 (%). Default 15"
+                        
+        input name: "par43", type: "number", description: "Enter number", required: true,
+        title: "Standard power reporting frequency\n\n" +
+        "Available settings: 1 - 254 (s) Default 30"
+        
+        input name: "par61", type: "number", description: "Enter number", required: true,
+        title: "LED Ring\n\n" +
+        "Available settings:\n" +
+        "0 - No change in colour. LED ring illumination colour determined by parameters 61 or 62 settings\n" +
+        "1 - LED ring flashes red / blue / white (default)\n" +
+        "2 - White illumination\n" +
+		"3 - Red illumination\n" +
+		"4 - Green illumination\n" +
+		"5 - Blue illumination\n" +
+		"6 - Yellow illumination\n" +
+		"7 - Cyan (Greenish blue) illumination\n" + 
+        "8 - Magenta (Purplish red) illumination\n" + 
+        "9 - illumination turned off completely"
+    }
 }
 
 def parse(String description) {
@@ -162,6 +188,7 @@ def poll() {
 }
 
 def refresh() {
+    log.debug "number: $number"
 	delayBetween([
 		zwave.switchBinaryV1.switchBinaryGet().format(),
 		zwave.meterV2.meterGet(scale: 0).format(),
@@ -179,11 +206,11 @@ def reset() {
 def configure() {
 
 	log.debug "Send Configuration to device"
-	delayBetween([
-    
-        zwave.configurationV1.configurationSet(parameterNumber: 40, size: 1, scaledConfigurationValue: 80).format(),   // Immediate power report. Available settings: 1 - 100 (%). Default 80
-        zwave.configurationV1.configurationSet(parameterNumber: 42, size: 1, scaledConfigurationValue: 15).format(), 	// Standard power reporting. Available settings: 1 - 100 (%). Default 15
-        zwave.configurationV1.configurationSet(parameterNumber: 43, size: 1, scaledConfigurationValue: 30).format(), 	// Standard power reporting frequency. Available settings: 1 - 254 (s) Default 30
+	delayBetween([   
+        zwave.configurationV1.configurationSet(parameterNumber: 40, size: 1, scaledConfigurationValue: par40.toInteger()).format(),    // Immediate power report. Available settings: 1 - 100 (%). Default 80
+        zwave.configurationV1.configurationSet(parameterNumber: 42, size: 1, scaledConfigurationValue: par42.toInteger()).format(), 	// Standard power reporting. Available settings: 1 - 100 (%). Default 15
+        zwave.configurationV1.configurationSet(parameterNumber: 43, size: 1, scaledConfigurationValue: par43.toInteger()).format(), 	// Standard power reporting frequency. Available settings: 1 - 254 (s) Default 30
+        zwave.configurationV1.configurationSet(parameterNumber: 61, size: 1, scaledConfigurationValue: par61.toInteger()).format(),     // LED Ring
         zwave.associationV1.associationSet(groupingIdentifier:1, nodeId:[zwaveHubNodeId]).format(),
         zwave.associationV1.associationSet(groupingIdentifier:2, nodeId:[zwaveHubNodeId]).format(),
         zwave.associationV1.associationSet(groupingIdentifier:3, nodeId:[zwaveHubNodeId]).format(),
