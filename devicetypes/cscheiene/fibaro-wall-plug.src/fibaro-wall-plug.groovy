@@ -78,6 +78,11 @@ metadata {
         //details(["switch","energy","reset","refresh","configure"])
 	}
     preferences {
+        input name: "par16", type: "number", description: "Enter number", required: true,
+        title: "Remember device status after power failure\n\n" +
+        "0 - Wall Plug does not memorize its state after a power failure. Connected device will be off after the power supply is reconnected\n" +
+        "1 - Wall Plug memorizes its state after a power failure.(Default)"
+        
         input name: "par40", type: "number", description: "Enter number", required: true,
         title: "Immediate power report\n\n" +
         "Available settings: 1 - 100 (%). Default 80"
@@ -91,7 +96,7 @@ metadata {
         "Available settings: 1 - 254 (s) Default 30"
         
         input name: "par61", type: "number", description: "Enter number", required: true,
-        title: "LED ring illumination colour when device is on\n\n" +
+        title: "LED ring illumination colour when device is ON\n\n" +
         "Available settings:\n" +
         "0 - LED ring illumination colour changes in predefined steps, depending on power consumption changes\n" +
         "1 - LED ring illumination colour changes continuously, using full spectrum of available colorus, depending on power consumption changes(default)\n" +
@@ -103,6 +108,19 @@ metadata {
 		"7 - Cyan (Greenish blue) illumination\n" + 
         "8 - Magenta (Purplish red) illumination\n" + 
         "9 - illumination turned off completely"
+        
+        input name: "par62", type: "number", description: "Enter number", required: true,
+        title: "LED ring illumination colour when device is OFF\n\n" +
+        "Available settings:\n" +
+        "0 - LED ring is illuminated with a color corresponding to the last measured power, before the controlled device was turned off\n" +
+        "1 - White illumination\n" +
+		"2 - Red illumination\n" +
+		"3 - Green illumination\n" +
+		"4 - Blue illumination\n" +
+		"5 - Yellow illumination\n" +
+		"6 - Cyan (Greenish blue) illumination\n" + 
+        "7 - Magenta (Purplish red) illumination\n" + 
+        "8 - illumination turned off completely"
     }
 }
 
@@ -210,10 +228,12 @@ def configure() {
 
 	log.debug "Sending Configuration to device"
 	delayBetween([   
-        zwave.configurationV1.configurationSet(parameterNumber: 40, size: 1, scaledConfigurationValue: par40.toInteger()).format(),    // Immediate power report. Available settings: 1 - 100 (%). Default 80
+        zwave.configurationV1.configurationSet(parameterNumber: 16, size: 1, scaledConfigurationValue: par16.toInteger()).format(),     // Remember device status after power failure     
+        zwave.configurationV1.configurationSet(parameterNumber: 40, size: 1, scaledConfigurationValue: par40.toInteger()).format(),     // Immediate power report. Available settings: 1 - 100 (%). Default 80
         zwave.configurationV1.configurationSet(parameterNumber: 42, size: 1, scaledConfigurationValue: par42.toInteger()).format(), 	// Standard power reporting. Available settings: 1 - 100 (%). Default 15
         zwave.configurationV1.configurationSet(parameterNumber: 43, size: 1, scaledConfigurationValue: par43.toInteger()).format(), 	// Standard power reporting frequency. Available settings: 1 - 254 (s) Default 30
-        zwave.configurationV1.configurationSet(parameterNumber: 61, size: 1, scaledConfigurationValue: par61.toInteger()).format(),     // LED Ring
+        zwave.configurationV1.configurationSet(parameterNumber: 61, size: 1, scaledConfigurationValue: par61.toInteger()).format(),     // LED Ring when ON
+        zwave.configurationV1.configurationSet(parameterNumber: 62, size: 1, scaledConfigurationValue: par62.toInteger()).format(),     // LED Ring when ON        
         zwave.associationV1.associationSet(groupingIdentifier:1, nodeId:[zwaveHubNodeId]).format(),
         zwave.associationV1.associationSet(groupingIdentifier:2, nodeId:[zwaveHubNodeId]).format(),
         zwave.associationV1.associationSet(groupingIdentifier:3, nodeId:[zwaveHubNodeId]).format(),
