@@ -30,21 +30,37 @@ metadata {
 		// TODO: define status and reply messages here
 	}
 
-	tiles {
+	tiles (scale: 2) {
+		multiAttributeTile(name:"main", type:"generic", width:6, height:4) {
+			tileAttribute("rain", key: "PRIMARY_CONTROL") {
+            	attributeState "rain",label:'${currentValue}', icon:"st.Weather.weather12", backgroundColors:[
+                	[value: 32, color: "#153591"],
+                    [value: 44, color: "#1e9cbb"],
+                    [value: 59, color: "#90d2a7"],
+					[value: 74, color: "#44b621"],
+					[value: 84, color: "#f1d801"],
+					[value: 92, color: "#d04e00"],
+					[value: 98, color: "#bc2323"]
+				]
+            }
+            tileAttribute ("rainSumHour", key: "SECONDARY_CONTROL") {
+				attributeState "rainSumHour", label:'${currentValue} Last Hour'
+			}
+		} 
  		valueTile("rain", "device.rain", width: 2, height: 2, canChangeIcon: false, inactiveLabel: false) {
  			state "default", label:'${currentValue}', icon:"st.Weather.weather12"
  		}
  		valueTile("rainSumHour", "device.rainSumHour", inactiveLabel: false) {
  			state "default", label:'${currentValue}\nhour'
  		}
- 		valueTile("rainSumDay", "device.rainSumDay", inactiveLabel: false) {
+ 		valueTile("rainSumDay", "device.rainSumDay", width: 2, height: 2, inactiveLabel: false) {
  			state "default", label:'${currentValue}\nday'
  		}
- 		standardTile("refresh", "device.rain", inactiveLabel: false, decoration: "flat") {
+ 		standardTile("refresh", "device.rain", width: 2, height: 2, inactiveLabel: false, decoration: "flat") {
  			state "default", action:"refresh.poll", icon:"st.secondary.refresh"
  		}
- 		main (["rain", "rainSumHour", "rainSumDay"])
- 		details(["rain", "rainSumHour", "rainSumDay", "refresh"])
+ 		main (["main",])
+ 		details(["main", "rainSumDay", "refresh"])
 	}
 }
 
