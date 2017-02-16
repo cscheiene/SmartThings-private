@@ -426,7 +426,7 @@ def createChildDevice(deviceFile, dni, name, label) {
 		def existingDevice = getChildDevice(dni)
 		if(!existingDevice) {
 			log.debug "Creating child"
-			def childDevice = addChildDevice("dianoga", deviceFile, dni, null, [name: name, label: label, completedSetup: true])
+			def childDevice = addChildDevice("cscheiene", deviceFile, dni, null, [name: name, label: label, completedSetup: true])
 		} else {
 			log.debug "Device $dni already exists"
 		}
