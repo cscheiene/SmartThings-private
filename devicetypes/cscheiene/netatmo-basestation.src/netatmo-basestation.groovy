@@ -29,7 +29,23 @@ metadata {
 		// TODO: define status and reply messages here
 	}
 
-	tiles {
+	tiles (scale: 2) {
+		multiAttributeTile(name:"main", type:"generic", width:6, height:4) {
+			tileAttribute("temperature", key: "PRIMARY_CONTROL") {
+            	attributeState "temperature",label:'${currentValue}°', icon:"st.Weather.weather2", backgroundColors:[
+                	[value: 32, color: "#153591"],
+                    [value: 44, color: "#1e9cbb"],
+                    [value: 59, color: "#90d2a7"],
+					[value: 74, color: "#44b621"],
+					[value: 84, color: "#f1d801"],
+					[value: 92, color: "#d04e00"],
+					[value: 98, color: "#bc2323"]
+				]
+            }
+            tileAttribute ("humidity", key: "SECONDARY_CONTROL") {
+				attributeState "humidity", label:'Humidity: ${currentValue}%'
+			}
+		} 
 		valueTile("temperature", "device.temperature", width: 2, height: 2, canChangeIcon: false) {
  			state("temperature", label: '${currentValue}°', icon:"st.Weather.weather2", backgroundColors: [
  				[value: 31, color: "#153591"],
@@ -45,24 +61,24 @@ metadata {
  		valueTile("humidity", "device.humidity", inactiveLabel: false) {
  			state "humidity", label:'${currentValue}%', unit:"Humidity"
  		}
- 		valueTile("carbonDioxide", "device.carbonDioxide", inactiveLabel: false) {
+ 		valueTile("carbonDioxide", "device.carbonDioxide", width: 2, height: 2, inactiveLabel: false) {
  			state "carbonDioxide", label:'${currentValue}ppm', unit:"CO2", backgroundColors: [
  				[value: 600, color: "#44B621"],
                 [value: 999, color: "#ffcc00"],
                 [value: 1000, color: "#e86d13"]
  				]
  		}
- 		valueTile("noise", "device.noise", inactiveLabel: false) {
+ 		valueTile("noise", "device.noise", width: 2, height: 2, inactiveLabel: false) {
  			state "noise", label:'${currentValue}db', unit:"Noise"
  		}
- 		valueTile("pressure", "device.pressure", inactiveLabel: false) {
+ 		valueTile("pressure", "device.pressure", width: 2, height: 2, inactiveLabel: false) {
  			state "pressure", label:'${currentValue}mbar', unit:"Pressure"
  		}
- 		standardTile("refresh", "device.pressure", inactiveLabel: false, decoration: "flat") {
+ 		standardTile("refresh", "device.pressure", width: 2, height: 2, inactiveLabel: false, decoration: "flat") {
  			state "default", action:"device.poll", icon:"st.secondary.refresh"
  		}
- 		main(["temperature", "humidity", "carbonDioxide", "noise", "pressure"])
- 		details(["temperature", "humidity", "carbonDioxide", "noise", "pressure", "refresh"])
+ 		main(["main"])
+ 		details(["main", "carbonDioxide", "noise", "pressure", "refresh"])
 	}
 }
 
