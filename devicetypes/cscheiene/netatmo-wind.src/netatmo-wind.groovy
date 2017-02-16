@@ -1,7 +1,6 @@
 /**
  *  netatmo-windmodule
  *
- *  Copyright 2014 Brian Steere
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  *  in compliance with the License. You may obtain a copy of the License at:
@@ -35,29 +34,29 @@ metadata {
 	}
 
 	tiles {
- 		valueTile("WindStrength", "WindStrength", width: 2, height: 1, canChangeIcon: true, inactiveLabel: false) {
+ 		valueTile("WindStrength", "WindStrength", canChangeIcon: true, inactiveLabel: false) {
  			state "default", label:'${currentValue} Average'
  		}
  		valueTile("WindAngle", "WindAngle", inactiveLabel: false) {
  			state "default", label:'${currentValue}° Average'
  		}
- 		valueTile("GustStrength", "GustStrength", width: 2, height: 1, inactiveLabel: false) {
+ 		valueTile("GustStrength", "GustStrength", inactiveLabel: false) {
  			state "default", label:'${currentValue} Gust'
  		}
         valueTile("GustAngle", "GustAngle", inactiveLabel: false) {
  			state "default", label:'${currentValue}° Gust'            
  		}
-        valueTile("max_wind_str", "max_wind_str", width: 2, height: 1, inactiveLabel: false) {
+        valueTile("max_wind_str", "max_wind_str", inactiveLabel: false) {
  			state "default", label:'${currentValue} Todays Max'            
  		}
-        valueTile("units", "units", width: 2, height: 1, inactiveLabel: false) {
+        valueTile("units", "units", inactiveLabel: false) {
  			state "default", label:'Units: ${currentValue}'            
  		}          
  		standardTile("refresh", "Netatmo Wind", inactiveLabel: false, decoration: "flat") {
  			state "default", action:"refresh.poll", icon:"st.secondary.refresh"
  		}      
  		main (["WindStrength", "WindAngle", "GustStrength"])
- 		details(["WindStrength", "WindAngle", "GustStrength", "GustAngle", "max_wind_str", "refresh", "units" ])
+ 		details(["WindStrength", "WindAngle", "units", "GustStrength", "GustAngle", "max_wind_str", "refresh" ])
 	}
 }
 
