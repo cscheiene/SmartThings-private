@@ -58,6 +58,12 @@ metadata {
  				]
  				)
  		}
+        		valueTile("min_temp", "min_temp", width: 2, height: 2) {
+ 			state "min_temp", label: 'Min: ${currentValue}°'
+ 		}
+        		valueTile("max_temp", "max_temp", width: 2, height: 2) {
+ 			state "max_temp", label: 'Max: ${currentValue}°'
+ 		}        
  		valueTile("humidity", "device.humidity", inactiveLabel: false) {
  			state "humidity", label:'${currentValue}%', unit:"Humidity"
  		}
@@ -78,7 +84,7 @@ metadata {
  			state "default", action:"device.poll", icon:"st.secondary.refresh"
  		}
  		main(["main"])
- 		details(["main", "carbonDioxide", "noise", "pressure", "refresh"])
+ 		details(["main", "carbonDioxide", "noise", "pressure", "max_temp", "min_temp", "refresh"])
 	}
 }
 
