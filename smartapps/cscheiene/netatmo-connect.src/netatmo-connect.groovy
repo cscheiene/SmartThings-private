@@ -505,11 +505,15 @@ def poll() {
 				child?.sendEvent(name: 'humidity', value: data['Humidity'])
 				child?.sendEvent(name: 'pressure', value: data['Pressure'])
 				child?.sendEvent(name: 'noise', value: data['Noise'])
+                child?.sendEvent(name: 'min_temp', value: data['min_temp'])
+                child?.sendEvent(name: 'max_temp', value: data['max_temp'])                
 				break;
 			case 'NAModule1':
 				log.debug "Updating NAModule1 $data"
 				child?.sendEvent(name: 'temperature', value: cToPref(data['Temperature']) as float, unit: getTemperatureScale())
 				child?.sendEvent(name: 'humidity', value: data['Humidity'])
+                child?.sendEvent(name: 'min_temp', value: data['min_temp'])
+                child?.sendEvent(name: 'max_temp', value: data['max_temp'])                
 				break;
 			case 'NAModule3':
 				log.debug "Updating NAModule3 $data"
@@ -523,6 +527,8 @@ def poll() {
 				child?.sendEvent(name: 'temperature', value: cToPref(data['Temperature']) as float, unit: getTemperatureScale())
 				child?.sendEvent(name: 'carbonDioxide', value: data['CO2'])
 				child?.sendEvent(name: 'humidity', value: data['Humidity'])
+                child?.sendEvent(name: 'min_temp', value: data['min_temp'])
+                child?.sendEvent(name: 'max_temp', value: data['max_temp'])
 				break;
             case 'NAModule2':
 				log.debug "Updating NAModule2 $data"
