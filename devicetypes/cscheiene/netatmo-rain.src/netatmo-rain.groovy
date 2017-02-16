@@ -56,11 +56,14 @@ metadata {
  		valueTile("rainSumDay", "device.rainSumDay", width: 2, height: 2, inactiveLabel: false) {
  			state "default", label:'${currentValue}\nday'
  		}
+        valueTile("units", "units", width: 2, height: 2, inactiveLabel: false) {
+ 			state "default", label:'Units: ${currentValue}'            
+ 		}         
  		standardTile("refresh", "device.rain", width: 2, height: 2, inactiveLabel: false, decoration: "flat") {
  			state "default", action:"refresh.poll", icon:"st.secondary.refresh"
  		}
  		main (["main",])
- 		details(["main", "rainSumDay", "refresh"])
+ 		details(["main", "rainSumDay", "units", "refresh"])
 	}
 }
 
