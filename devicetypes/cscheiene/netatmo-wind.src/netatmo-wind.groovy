@@ -34,8 +34,8 @@ metadata {
 	}
 
 	tiles {
- 		valueTile("WindStrength", "WindStrength", canChangeIcon: true, inactiveLabel: false) {
- 			state "default", label:'${currentValue} Average'
+ 		valueTile("WindStrength", "WindStrength", canChangeIcon: false, inactiveLabel: false) {
+ 			state "default", label:'${currentValue} Average', icon:"st.Weather.weather1"
  		}
  		valueTile("WindAngle", "WindAngle", inactiveLabel: false) {
  			state "default", label:'${currentValue}° Average'
