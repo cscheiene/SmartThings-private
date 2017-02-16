@@ -56,19 +56,19 @@ metadata {
  		valueTile("WindAngle", "WindAngle", inactiveLabel: false) {
  			state "default", label:'${currentValue}° Average'
  		}
- 		valueTile("GustStrength", "GustStrength", width: 2, height: 1, inactiveLabel: false) {
+ 		valueTile("GustStrength", "GustStrength", width: 2, height: 2, inactiveLabel: false) {
  			state "default", label:'${currentValue} Gust'
  		}
-        valueTile("GustAngle", "GustAngle", width: 2, height: 1, inactiveLabel: false) {
+        valueTile("GustAngle", "GustAngle", width: 2, height: 2, inactiveLabel: false) {
  			state "default", label:'${currentValue}° Gust'            
  		}
-        valueTile("max_wind_str", "max_wind_str", width: 2, height: 1, inactiveLabel: false) {
+        valueTile("max_wind_str", "max_wind_str", width: 2, height: 2, inactiveLabel: false) {
  			state "default", label:'${currentValue} Todays Max'            
  		}
-        valueTile("units", "units", width: 2, height: 1, inactiveLabel: false) {
+        valueTile("units", "units", width: 2, height: 2, inactiveLabel: false) {
  			state "default", label:'Units: ${currentValue}'            
  		}          
- 		standardTile("refresh", "Netatmo Wind", width: 2, height: 1, inactiveLabel: false, decoration: "flat") {
+ 		standardTile("refresh", "Netatmo Wind", width: 2, height: 2, inactiveLabel: false, decoration: "flat") {
  			state "default", action:"refresh.poll", icon:"st.secondary.refresh"
  		}      
  		main (["main"])
