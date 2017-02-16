@@ -58,11 +58,17 @@ metadata {
  		valueTile("humidity", "device.humidity", inactiveLabel: false) {
  			state "humidity", label:'${currentValue}%', unit:"Humidity"
  		}
+        valueTile("min_temp", "min_temp", width: 2, height: 2) {
+ 			state "min_temp", label: 'Min: ${currentValue}°'
+ 		}
+        valueTile("max_temp", "max_temp", width: 2, height: 2) {
+ 			state "max_temp", label: 'Max: ${currentValue}°'
+ 		}        
  		standardTile("refresh", "device.thermostatMode", width: 2, height: 2, inactiveLabel: false, decoration: "flat") {
  			state "default", action:"device.poll", icon:"st.secondary.refresh"
  		}
  		main (["main"])
- 		details(["main", "refresh"])
+ 		details(["main", "max_temp", "min_temp", "refresh"])
 	}
 }
 
