@@ -61,13 +61,23 @@ metadata {
  			state "default", label:'${currentValue}%', unit:"Humidity"
  		}
  		valueTile("carbonDioxide", "device.carbonDioxide", width: 2, height: 2, inactiveLabel: false) {
- 			state "default", label:'${currentValue}ppm', unit:"CO2"
+ 			state "carbonDioxide", label:'${currentValue}ppm', unit:"CO2", backgroundColors: [
+ 				[value: 600, color: "#44B621"],
+                [value: 999, color: "#ffcc00"],
+                [value: 1000, color: "#e86d13"]
+ 				]
  		}
+        valueTile("min_temp", "min_temp", width: 2, height: 2) {
+ 			state "min_temp", label: 'Min: ${currentValue}°'
+ 		}
+        valueTile("max_temp", "max_temp", width: 2, height: 2) {
+ 			state "max_temp", label: 'Max: ${currentValue}°'
+ 		}         
  		standardTile("refresh", "device.pressure", width: 2, height: 2, inactiveLabel: false, decoration: "flat") {
  			state "default", action:"device.poll", icon:"st.secondary.refresh"
  		}
  		main "main"
- 		details(["main","carbonDioxide", "refresh"])
+ 		details(["main","carbonDioxide","max_temp","min_temp","refresh"])
 	}
 }
 
