@@ -47,12 +47,6 @@ metadata {
 				attributeState "rainSumHour", label:'${currentValue} Last Hour'
 			}
 		} 
- 		valueTile("rain", "device.rain", width: 2, height: 2, canChangeIcon: false, inactiveLabel: false) {
- 			state "default", label:'${currentValue}', icon:"st.Weather.weather12"
- 		}
- 		valueTile("rainSumHour", "device.rainSumHour", inactiveLabel: false) {
- 			state "default", label:'${currentValue}\nhour'
- 		}
  		valueTile("rainSumDay", "device.rainSumDay", width: 2, height: 2, inactiveLabel: false) {
  			state "default", label:'${currentValue}\nday'
  		}
@@ -60,7 +54,7 @@ metadata {
  			state "default", label:'Units: ${currentValue}'            
  		}         
  		standardTile("refresh", "device.rain", width: 2, height: 2, inactiveLabel: false, decoration: "flat") {
- 			state "default", action:"refresh.poll", icon:"st.secondary.refresh"
+ 			state "default", action:"poll", icon:"st.secondary.refresh"
  		}
  		main (["main",])
  		details(["main", "rainSumDay", "units", "refresh"])

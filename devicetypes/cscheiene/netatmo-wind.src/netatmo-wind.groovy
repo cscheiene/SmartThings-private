@@ -50,12 +50,6 @@ metadata {
 				attributeState "WindAngle", label:'${currentValue}° Average'
 			}
 		}        
- 		valueTile("WindStrength", "WindStrength", width: 2, height: 2, canChangeIcon: false, inactiveLabel: false) {
- 			state "default", label:'${currentValue} Average', icon:"st.Weather.weather1"
- 		}
- 		valueTile("WindAngle", "WindAngle", inactiveLabel: false) {
- 			state "default", label:'${currentValue}° Average'
- 		}
  		valueTile("GustStrength", "GustStrength", width: 2, height: 2, inactiveLabel: false) {
  			state "default", label:'${currentValue} Gust'
  		}
@@ -68,8 +62,8 @@ metadata {
         valueTile("units", "units", width: 2, height: 2, inactiveLabel: false) {
  			state "default", label:'Units: ${currentValue}'            
  		}          
- 		standardTile("refresh", "Netatmo Wind", width: 2, height: 2, inactiveLabel: false, decoration: "flat") {
- 			state "default", action:"refresh.poll", icon:"st.secondary.refresh"
+ 		standardTile("refresh", "device.WindStrength", width: 2, height: 2, inactiveLabel: false, decoration: "flat") {
+ 			state "default", action:"poll", icon:"st.secondary.refresh"
  		}      
  		main (["main"])
  		details(["main", "GustStrength", "GustAngle", "max_wind_str", "units", "refresh" ])
