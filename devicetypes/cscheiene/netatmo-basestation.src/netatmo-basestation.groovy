@@ -19,8 +19,8 @@ metadata {
 		capability "Relative Humidity Measurement"
 		capability "Temperature Measurement"
         capability "Sensor"
+        capability "Carbon Dioxide Measurement"
 
-		attribute "carbonDioxide", "string"
 		attribute "noise", "string"
 		attribute "pressure", "string"
 	}
@@ -81,7 +81,7 @@ metadata {
  			state "pressure", label:'${currentValue}mbar', unit:"Pressure"
  		}
  		standardTile("refresh", "device.pressure", width: 2, height: 2, inactiveLabel: false, decoration: "flat") {
- 			state "default", action:"device.poll", icon:"st.secondary.refresh"
+ 			state "default", action:"poll", icon:"st.secondary.refresh"
  		}
  		main(["main"])
  		details(["main", "carbonDioxide", "noise", "pressure", "max_temp", "min_temp", "refresh"])
