@@ -84,7 +84,7 @@ metadata {
  			state "default", action:"poll", icon:"st.secondary.refresh"
  		}
  		main(["main"])
- 		details(["main", "carbonDioxide", "noise", "pressure", "max_temp", "min_temp", "refresh"])
+ 		details(["main", "carbonDioxide", "noise", "pressure", "max_temp", "min_temp"])
 	}
 }
 

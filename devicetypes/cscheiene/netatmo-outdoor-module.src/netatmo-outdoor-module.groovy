@@ -48,12 +48,23 @@ metadata {
  		}
         valueTile("max_temp", "max_temp", width: 2, height: 2) {
  			state "max_temp", label: 'Max: ${currentValue}°'
- 		}        
+ 		}
+		valueTile("battery_percent", "battery_percent", inactiveLabel: false, width: 2, height: 2) {
+			state "battery_percent", label:'${currentValue}%', unit:"", backgroundColors:[
+                [value: 20, color: "#ff0000"],
+                [value: 35, color: "#fd4e3a"],
+                [value: 50, color: "#fda63a"],
+                [value: 60, color: "#fdeb3a"],
+                [value: 75, color: "#d4fd3a"],
+                [value: 90, color: "#7cfd3a"],
+                [value: 99, color: "#55fd3a"]
+            ]
+		}        
  		standardTile("refresh", "device.thermostatMode", width: 2, height: 2, inactiveLabel: false, decoration: "flat") {
  			state "default", action:"poll", icon:"st.secondary.refresh"
  		}
  		main (["main"])
- 		details(["main", "max_temp", "min_temp", "refresh"])
+ 		details(["main", "max_temp", "min_temp"])
 	}
 }
 
