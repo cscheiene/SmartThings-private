@@ -431,8 +431,8 @@ def listDevices() {
 		}
 
         section("Preferences") {
-        	input "rainUnits", "enum", title: "Rain Units", description: "Millimeters (mm) or Inches (in)", required: true, options: [mm:'Millimeters', in:'Inches']
-            input "windUnits", "enum", title: "Wind Units", description: "kmh (kmh) or ms (ms)", required: true, options: [kmh:'kmh', ms:'ms']
+        	input "rainUnits", "enum", title: "Rain Units", description: "Please select rain units", required: true, options: [mm:'Millimeters', in:'Inches']
+            input "windUnits", "enum", title: "Wind Units", description: "Please select wind units)", required: true, options: [kmh:'kmh', ms:'ms', mph:'mph', kts:'kts']
         }
 	}
 }
@@ -557,10 +557,18 @@ def windToPref(WindStrength) {
     	return WindStrength
         return GustStrength
         return max_wind_str
-    } else {
+    } else if (settings.windUnits == 'ms') {
     	return WindStrength * 0.28
         return GustStrength * 0.28
         return max_wind_str * 0.28
+    } else if (settings.windUnits == 'mph') {
+    	return WindStrength * 0.62
+        return GustStrength * 0.62
+        return max_wind_str * 0.62
+    } else if (settings.windUnits == 'kts') {
+    	return WindStrength * 0.54
+        return GustStrength * 0.54
+        return max_wind_str * 0.54
     }
 }
 
