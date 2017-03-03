@@ -432,7 +432,9 @@ def listDevices() {
 
         section("Preferences") {
         	input "rainUnits", "enum", title: "Rain Units", description: "Please select rain units", required: true, options: [mm:'Millimeters', in:'Inches']
-            input "windUnits", "enum", title: "Wind Units", description: "Please select wind units)", required: true, options: [kmh:'kmh', ms:'ms', mph:'mph', kts:'kts']
+            input "pressUnits", "enum", title: "Pressure Units", description: "Please select pressure units", required: true, options: [mbar:'mbar', inhg:'inhg']            
+            input "windUnits", "enum", title: "Wind Units", description: "Please select wind units", required: true, options: [kmh:'kmh', ms:'ms', mph:'mph', kts:'kts']
+
         }
 	}
 }
@@ -496,10 +498,11 @@ def poll() {
 				child?.sendEvent(name: 'temperature', value: cToPref(data['Temperature']) as float, unit: getTemperatureScale())
 				child?.sendEvent(name: 'carbonDioxide', value: data['CO2'])
 				child?.sendEvent(name: 'humidity', value: data['Humidity'])
-				child?.sendEvent(name: 'pressure', value: data['Pressure'])
+                child?.sendEvent(name: 'Pressure', value: pressToPref(data['Pressure']) as float, unit: settings.pressUnits)
 				child?.sendEvent(name: 'noise', value: data['Noise'])
                 child?.sendEvent(name: 'min_temp', value: cToPref(data['min_temp']) as float, unit: getTemperatureScale())
-                child?.sendEvent(name: 'max_temp', value: cToPref(data['max_temp']) as float, unit: getTemperatureScale())                
+                child?.sendEvent(name: 'max_temp', value: cToPref(data['max_temp']) as float, unit: getTemperatureScale())
+                child?.sendEvent(name: 'units', value: settings.pressUnits)
 				break;
 			case 'NAModule1':
 				log.debug "Updating NAModule1 $data"
@@ -554,6 +557,14 @@ def rainToPref(rain) {
     	return rain
     } else {
     	return rain * 0.039370
+    }
+}
+
+def pressToPref(Pressure) {
+	if(settings.pressUnits == 'mbar') {
+    	return Pressure
+    } else {
+    	return Pressure * 0.029530
     }
 }
 
