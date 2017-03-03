@@ -360,7 +360,7 @@ def initialize() {
     
 	// Run initial poll and schedule future polls
 	poll()
-	runEvery10Minutes("poll")
+	runEvery5Minutes("poll")
 }
 
 def uninstalled() {
@@ -498,15 +498,15 @@ def poll() {
 				child?.sendEvent(name: 'humidity', value: data['Humidity'])
 				child?.sendEvent(name: 'pressure', value: data['Pressure'])
 				child?.sendEvent(name: 'noise', value: data['Noise'])
-                child?.sendEvent(name: 'min_temp', value: data['min_temp'])
-                child?.sendEvent(name: 'max_temp', value: data['max_temp'])                
+                child?.sendEvent(name: 'min_temp', value: cToPref(data['min_temp']) as float, unit: getTemperatureScale())
+                child?.sendEvent(name: 'max_temp', value: cToPref(data['max_temp']) as float, unit: getTemperatureScale())                
 				break;
 			case 'NAModule1':
 				log.debug "Updating NAModule1 $data"
 				child?.sendEvent(name: 'temperature', value: cToPref(data['Temperature']) as float, unit: getTemperatureScale())
 				child?.sendEvent(name: 'humidity', value: data['Humidity'])
-                child?.sendEvent(name: 'min_temp', value: data['min_temp'])
-                child?.sendEvent(name: 'max_temp', value: data['max_temp'])                
+                child?.sendEvent(name: 'min_temp', value: cToPref(data['min_temp']) as float, unit: getTemperatureScale())
+                child?.sendEvent(name: 'max_temp', value: cToPref(data['max_temp']) as float, unit: getTemperatureScale())                
 				break;
 			case 'NAModule3':
 				log.debug "Updating NAModule3 $data"
@@ -520,8 +520,8 @@ def poll() {
 				child?.sendEvent(name: 'temperature', value: cToPref(data['Temperature']) as float, unit: getTemperatureScale())
 				child?.sendEvent(name: 'carbonDioxide', value: data['CO2'])
 				child?.sendEvent(name: 'humidity', value: data['Humidity'])
-                child?.sendEvent(name: 'min_temp', value: data['min_temp'])
-                child?.sendEvent(name: 'max_temp', value: data['max_temp'])
+                child?.sendEvent(name: 'min_temp', value: cToPref(data['min_temp']) as float, unit: getTemperatureScale())
+                child?.sendEvent(name: 'max_temp', value: cToPref(data['max_temp']) as float, unit: getTemperatureScale())
 				break;
             case 'NAModule2':
 				log.debug "Updating NAModule2 $data"
@@ -539,8 +539,13 @@ def poll() {
 def cToPref(temp) {
 	if(getTemperatureScale() == 'C') {
     	return temp
+        return max_temp
+        return min_temp
+        
     } else {
 		return temp * 1.8 + 32
+        return max_temp * 1.8 + 32
+        return min_temp * 1.8 + 32
     }
 }
 
