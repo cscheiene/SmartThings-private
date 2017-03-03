@@ -77,14 +77,17 @@ metadata {
  		valueTile("noise", "device.noise", width: 2, height: 2, inactiveLabel: false) {
  			state "noise", label:'${currentValue}db', unit:"Noise"
  		}
- 		valueTile("pressure", "device.pressure", width: 2, height: 2, inactiveLabel: false) {
- 			state "pressure", label:'${currentValue}mbar', unit:"Pressure"
+ 		valueTile("Pressure", "device.Pressure", width: 2, height: 1, inactiveLabel: false) {
+ 			state "Pressure", label:'${currentValue}', unit:"Pressure"
  		}
+        valueTile("units", "units", width: 2, height: 1, inactiveLabel: false) {
+ 			state "default", label:'${currentValue}'            
+ 		}        
  		standardTile("refresh", "device.pressure", width: 2, height: 2, inactiveLabel: false, decoration: "flat") {
  			state "default", action:"poll", icon:"st.secondary.refresh"
  		}
  		main(["main"])
- 		details(["main", "carbonDioxide", "noise", "pressure", "max_temp", "min_temp"])
+ 		details(["main", "carbonDioxide", "noise", "Pressure", "units", "max_temp", "min_temp"])
 	}
 }
 
