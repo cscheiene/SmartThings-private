@@ -19,7 +19,7 @@
 metadata {
 	definition (name: "Netatmo Wind", namespace: "cscheiene", author: "Brian Steere, cscheiene") {
 	    capability "Sensor"	
-        attribute "WindStrengt", "number"
+        attribute "WindStrength", "number"
         attribute "WindAngle", "number"
         attribute "GustStrength", "number"
         attribute "GustAngle", "number"
@@ -36,7 +36,7 @@ metadata {
 	tiles (scale: 2) {
 		multiAttributeTile(name:"main", type:"generic", width:6, height:4) {
 			tileAttribute("WindStrength", key: "PRIMARY_CONTROL") {
-            	attributeState "WindStrength",label:'${currentValue}', icon:"st.Weather.weather1", backgroundColors:[
+            	attributeState "WindStrength", label:'${currentValue}', icon:"st.Weather.weather1", backgroundColors:[
                 	[value: 32, color: "#153591"],
                     [value: 44, color: "#1e9cbb"],
                     [value: 59, color: "#90d2a7"],
@@ -72,10 +72,7 @@ metadata {
                 [value: 90, color: "#7cfd3a"],
                 [value: 99, color: "#55fd3a"]
             ]
-		}        
- 		standardTile("refresh", "device.WindStrength", width: 2, height: 2, inactiveLabel: false, decoration: "flat") {
- 			state "default", action:"poll", icon:"st.secondary.refresh"
- 		}      
+		}             
  		main (["main"])
  		details(["main", "GustStrength", "GustAngle", "max_wind_str", "units"])
 	}
