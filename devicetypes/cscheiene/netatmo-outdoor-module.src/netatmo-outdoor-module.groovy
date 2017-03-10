@@ -14,6 +14,8 @@
  *
  *  Based on Brian Steere's netatmo-outdoor DTH
  *
+ *  Date: 10/03-2017
+ * 
  */
 metadata {
 	definition (name: "Netatmo Outdoor Module", namespace: "cscheiene", author: "Brian Steere,cscheiene") {
@@ -64,7 +66,7 @@ metadata {
  			state "default", action:"poll", icon:"st.secondary.refresh"
  		}
  		main (["main"])
- 		details(["main", "max_temp", "min_temp"])
+ 		details(["main", "min_temp", "max_temp"])
 	}
 }
 
