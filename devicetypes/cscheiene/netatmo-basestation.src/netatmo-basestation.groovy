@@ -1,5 +1,5 @@
 /**
- *  netatmo-basestation
+ *  netatmo-basestation Date: 11.03.2017
  *
  *  Copyright 2014 Brian Steere
  *
@@ -14,6 +14,8 @@
  *
  * Based on Brian Steere's netatmo-basestation DTH
  */
+ 
+ 
 metadata {
 	definition (name: "Netatmo Basestation", namespace: "cscheiene", author: "Brian Steere,cscheiene") {
 		capability "Relative Humidity Measurement"
@@ -87,7 +89,7 @@ metadata {
  			state "default", action:"poll", icon:"st.secondary.refresh"
  		}
  		main(["main"])
- 		details(["main", "carbonDioxide", "noise", "Pressure", "units", "max_temp", "min_temp"])
+ 		details(["main", "carbonDioxide", "noise", "Pressure", "units", "min_temp", "max_temp"])
 	}
 }
 
