@@ -1,5 +1,5 @@
 /**
- *  netatmo-basestation
+ *  netatmo-rain module Date: 11.03.2017
  *
  *  Copyright 2014 Brian Steere
  *
