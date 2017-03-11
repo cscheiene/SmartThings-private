@@ -1,5 +1,5 @@
 /**
- *  netatmo-basestation
+ *  netatmo-basestation Date: 11.03.2017
  *
  *  Copyright 2014 Brian Steere
  *
@@ -73,7 +73,7 @@ metadata {
  			state "default", action:"poll", icon:"st.secondary.refresh"
  		}
  		main "main"
- 		details(["main","carbonDioxide","max_temp","min_temp"])
+ 		details(["main","carbonDioxide","min_temp","max_temp"])
 	}
 }
 
