@@ -1,5 +1,5 @@
 /**
- *  netatmo-windmodule
+ *  netatmo-windmodule Date: 11.03.2017
  *
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
@@ -47,7 +47,7 @@ metadata {
 				]
             }
             tileAttribute ("WindAngle", key: "SECONDARY_CONTROL") {
-				attributeState "WindAngle", label:'${currentValue}° Average'
+				attributeState "WindAngle", label:'${currentValue}°'
 			}
 		}        
  		valueTile("GustStrength", "GustStrength", width: 2, height: 2, inactiveLabel: false) {
