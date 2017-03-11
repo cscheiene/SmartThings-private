@@ -1,5 +1,5 @@
 /**
- *  netatmo-outdoor
+ *  netatmo-outdoor Date: 11.03.2017
  *
  *  Copyright 2014 Brian Steere
  *
