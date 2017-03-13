@@ -374,8 +374,8 @@ def initialize() {
 
 	// Do the initial poll
 	poll()
-	// Schedule it to run every 10 minutes
-	runEvery10Minutes("poll")
+	// Schedule it to run every 5 minutes
+	runEvery5Minutes("poll")
 }
 
 def uninstalled() {
