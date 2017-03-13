@@ -1,5 +1,5 @@
 /**
- *  netatmo-rain module Date: 11.03.2017
+ *  netatmo-rain module Date: 13.03.2017
  *
  *  Copyright 2014 Brian Steere
  *
@@ -17,7 +17,8 @@
  */
 metadata {
 	definition (name: "Netatmo Rain", namespace: "cscheiene", author: "Brian Steere,cscheiene") {
-	    capability "Sensor"	
+	    capability "Sensor"
+        capability "Battery"
         attribute "rain", "number"
         attribute "rainSumHour", "number"
         attribute "rainSumDay", "number"
@@ -53,8 +54,8 @@ metadata {
         valueTile("units", "units", width: 2, height: 2, inactiveLabel: false) {
  			state "default", label:'Units: ${currentValue}'            
  		}
-		valueTile("battery_percent", "battery_percent", inactiveLabel: false, width: 2, height: 2) {
-			state "battery_percent", label:'${currentValue}%', unit:"", backgroundColors:[
+		valueTile("battery", "device.battery", inactiveLabel: false, width: 2, height: 2) {
+			state "battery_percent", label:'${currentValue}% Battery', unit:"", backgroundColors:[
                 [value: 20, color: "#ff0000"],
                 [value: 35, color: "#fd4e3a"],
                 [value: 50, color: "#fda63a"],
@@ -63,12 +64,12 @@ metadata {
                 [value: 90, color: "#7cfd3a"],
                 [value: 99, color: "#55fd3a"]
             ]
-		}          
+		}        
  		standardTile("refresh", "device.rain", width: 2, height: 2, inactiveLabel: false, decoration: "flat") {
  			state "default", action:"poll", icon:"st.secondary.refresh"
  		}
  		main (["main",])
- 		details(["main", "rainSumDay", "units"])
+ 		details(["main", "rainSumDay", "units", "battery"])
 	}
 }
 
