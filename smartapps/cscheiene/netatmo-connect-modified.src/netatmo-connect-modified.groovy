@@ -1,5 +1,5 @@
 /**
- * Netatmo Connect Datte: 13.03.2017
+ * Netatmo Connect Date: 13.03.2017
  */
 import java.text.DecimalFormat
 import groovy.json.JsonSlurper
@@ -506,15 +506,15 @@ def poll() {
 				child?.sendEvent(name: 'humidity', value: data['Humidity'])
 				child?.sendEvent(name: 'pressure', value: data['Pressure'])
 				child?.sendEvent(name: 'noise', value: data['Noise'])
-                child?.sendEvent(name: 'min_temp', value: data['min_temp'])
-                child?.sendEvent(name: 'max_temp', value: data['max_temp'])                
+                child?.sendEvent(name: 'min_temp', value: cToPref(data['min_temp']) as float, unit: getTemperatureScale())
+                child?.sendEvent(name: 'max_temp', value: cToPref(data['max_temp']) as float, unit: getTemperatureScale())                
 				break;
 			case 'NAModule1':
 				log.debug "Updating NAModule1 $data"
 				child?.sendEvent(name: 'temperature', value: cToPref(data['Temperature']) as float, unit: getTemperatureScale())
 				child?.sendEvent(name: 'humidity', value: data['Humidity'])
-                child?.sendEvent(name: 'min_temp', value: data['min_temp'])
-                child?.sendEvent(name: 'max_temp', value: data['max_temp'])
+                child?.sendEvent(name: 'min_temp', value: cToPref(data['min_temp']) as float, unit: getTemperatureScale())
+                child?.sendEvent(name: 'max_temp', value: cToPref(data['max_temp']) as float, unit: getTemperatureScale())
                 child?.sendEvent(name: 'battery', value: detail['battery_percent'])
 				break;
 			case 'NAModule3':
@@ -530,8 +530,8 @@ def poll() {
 				child?.sendEvent(name: 'temperature', value: cToPref(data['Temperature']) as float, unit: getTemperatureScale())
 				child?.sendEvent(name: 'carbonDioxide', value: data['CO2'])
 				child?.sendEvent(name: 'humidity', value: data['Humidity'])
-                child?.sendEvent(name: 'min_temp', value: data['min_temp'])
-                child?.sendEvent(name: 'max_temp', value: data['max_temp'])
+                child?.sendEvent(name: 'min_temp', value: cToPref(data['min_temp']) as float, unit: getTemperatureScale())
+                child?.sendEvent(name: 'max_temp', value: cToPref(data['max_temp']) as float, unit: getTemperatureScale())
                 child?.sendEvent(name: 'battery', value: detail['battery_percent'])
 				break;
             case 'NAModule2':
