@@ -1,5 +1,5 @@
 /**
- *  netatmo-rain module Date: 13.03.2017
+ *  netatmo-rain module Date: 17.03.2017
  *
  *  Copyright 2014 Brian Steere
  *
@@ -34,15 +34,7 @@ metadata {
 	tiles (scale: 2) {
 		multiAttributeTile(name:"main", type:"generic", width:6, height:4) {
 			tileAttribute("rain", key: "PRIMARY_CONTROL") {
-            	attributeState "rain",label:'${currentValue}', icon:"st.Weather.weather12", backgroundColors:[
-                	[value: 32, color: "#153591"],
-                    [value: 44, color: "#1e9cbb"],
-                    [value: 59, color: "#90d2a7"],
-					[value: 74, color: "#44b621"],
-					[value: 84, color: "#f1d801"],
-					[value: 92, color: "#d04e00"],
-					[value: 98, color: "#bc2323"]
-				]
+            	attributeState "rain",label:'${currentValue}', icon:"st.Weather.weather12", backgroundColor:"#00a0dc"
             }
             tileAttribute ("rainSumHour", key: "SECONDARY_CONTROL") {
 				attributeState "rainSumHour", label:'${currentValue} Last Hour'
