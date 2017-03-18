@@ -1,6 +1,7 @@
 /**
- * Netatmo Connect Date: 13.03.2017
+ * Netatmo Connect Date: 18.03.2017
  */
+
 import java.text.DecimalFormat
 import groovy.json.JsonSlurper
 
@@ -448,7 +449,7 @@ def listDevices() {
         section("Preferences") {
         	input "rainUnits", "enum", title: "Rain Units", description: "Please select rain units", required: true, options: [mm:'Millimeters', in:'Inches']
             input "pressUnits", "enum", title: "Pressure Units", description: "Please select pressure units", required: true, options: [mbar:'mbar', inhg:'inhg']            
-            input "windUnits", "enum", title: "Wind Units", description: "Please select wind units", required: true, options: [kmh:'kmh', ms:'ms', mph:'mph', kts:'kts']
+            input "windUnits", "enum", title: "Wind Units", description: "Please select wind units", required: true, options: [kph:'kph', ms:'ms', mph:'mph', kts:'kts']
         }
 	}
 }
@@ -519,9 +520,9 @@ def poll() {
 				break;
 			case 'NAModule3':
 				log.debug "Updating NAModule3 $data"
-				child?.sendEvent(name: 'rain', value: rainToPref(data['Rain']) as float, unit: settings.rainUnits)
-				child?.sendEvent(name: 'rainSumHour', value: rainToPref(data['sum_rain_1']) as float, unit: settings.rainUnits)
-				child?.sendEvent(name: 'rainSumDay', value: rainToPref(data['sum_rain_24']) as float, unit: settings.rainUnits)
+				child?.sendEvent(name: 'rain', value: (rainToPref(data['Rain'])).toDouble().trunc(1), unit: settings.rainUnits)
+				child?.sendEvent(name: 'rainSumHour', value: (rainToPref(data['sum_rain_1'])).toDouble().trunc(1), unit: settings.rainUnits)
+				child?.sendEvent(name: 'rainSumDay', value: (rainToPref(data['sum_rain_24'])).toDouble().trunc(1), unit: settings.rainUnits)
 				child?.sendEvent(name: 'units', value: settings.rainUnits)
                 child?.sendEvent(name: 'battery', value: detail['battery_percent'])
 				break;
@@ -539,9 +540,9 @@ def poll() {
 				child?.sendEvent(name: 'WindAngle', value: data['WindAngle'])
                 child?.sendEvent(name: 'GustAngle', value: data['GustAngle'])
                 child?.sendEvent(name: 'battery', value: detail['battery_percent'])
-				child?.sendEvent(name: 'WindStrength', value: windToPref(data['WindStrength']) as float, unit: settings.windUnits)
-                child?.sendEvent(name: 'GustStrength', value: windToPref(data['GustStrength']) as float, unit: settings.windUnits)
-                child?.sendEvent(name: 'max_wind_str', value: windToPref(data['max_wind_str']) as float, unit: settings.windUnits)
+				child?.sendEvent(name: 'WindStrength', value: (windToPref(data['WindStrength'])).toDouble().trunc(1), unit: settings.windUnits)
+                child?.sendEvent(name: 'GustStrength', value: (windToPref(data['GustStrength'])).toDouble().trunc(1), unit: settings.windUnits)
+                child?.sendEvent(name: 'max_wind_str', value: (windToPref(data['max_wind_str'])).toDouble().trunc(1), unit: settings.windUnits)
                 child?.sendEvent(name: 'units', value: settings.windUnits)
  				break;
 		}
@@ -572,23 +573,15 @@ def pressToPref(Pressure) {
     }
 }
 
-def windToPref(WindStrength) {
-	if(settings.windUnits == 'kmh') {
-    	return WindStrength
-        return GustStrength
-        return max_wind_str
+def windToPref(Wind) {
+	if(settings.windUnits == 'kph') {
+    	return Wind
     } else if (settings.windUnits == 'ms') {
-    	return WindStrength * 0.28
-        return GustStrength * 0.28
-        return max_wind_str * 0.28
+    	return Wind * 0.277778
     } else if (settings.windUnits == 'mph') {
-    	return WindStrength * 0.62
-        return GustStrength * 0.62
-        return max_wind_str * 0.62
+    	return Wind * 0.621371192
     } else if (settings.windUnits == 'kts') {
-    	return WindStrength * 0.54
-        return GustStrength * 0.54
-        return max_wind_str * 0.54
+    	return Wind * 0.539956803
     }
 }
 
