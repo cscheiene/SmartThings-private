@@ -1,5 +1,5 @@
 /**
- *  netatmo-windmodule Date: 17.03.2017
+ *  netatmo-windmodule Date: 20.03.2017
  *
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
@@ -27,7 +27,6 @@ metadata {
         attribute "GustAngle", "number"
         attribute "max_wind_str", "number"
         attribute "units", "string"
-        attribute "windSpeed", "number"
         
         command "poll"
 	}
