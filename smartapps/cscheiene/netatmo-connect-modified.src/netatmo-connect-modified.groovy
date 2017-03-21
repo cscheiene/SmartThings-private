@@ -387,28 +387,57 @@ def uninstalled() {
 
 def getDeviceList() {
 	log.debug "In getDeviceList"
+def deviceList = [:]
+def moduleName = null
+state.deviceDetail = [:]
+state.deviceState = [:]
 
-	def deviceList = [:]
-	state.deviceDetail = [:]
-	state.deviceState = [:]
-
-        apiGet("/api/getstationsdata") { resp ->
-            resp.data.body.devices.each { value ->
-                def key = value._id
+apiGet("/api/getstationsdata",["get_favorites":true]) { resp ->
+    	state.response = resp.data.body
+        resp.data.body.devices.each { value ->
+            def key = value._id
+            if (value.module_name != null) {
                 deviceList[key] = "${value.station_name}: ${value.module_name}"
                 state.deviceDetail[key] = value
                 state.deviceState[key] = value.dashboard_data
-                value.modules.each { value2 ->            
-                    def key2 = value2._id
+                }
+
+            value.modules.each { value2 ->            
+                def key2 = value2._id
+
+				if (value2.module_name != null) {
                     deviceList[key2] = "${value.station_name}: ${value2.module_name}"
                     state.deviceDetail[key2] = value2
-                    state.deviceState[key2] = value2.dashboard_data            
-                }
+                    state.deviceState[key2] = value2.dashboard_data
+                    }
+				else {
+                    switch(value2.type) {
+                    case "NAModule1":
+                    	moduleName = "Outdoor ${value.station_name}" 
+                        break
+                    case "NAModule2":
+                    	moduleName = "Wind ${value.station_name}" 
+                        break
+                    case "NAModule3":
+                    	moduleName = "Rain ${value.station_name}" 
+                        break
+                    case "NAModule4":
+                    	moduleName = "Additional ${value.station_name}" 
+                        break
+                        }
+              
+                    deviceList[key2] = "${value.station_name}: ${moduleName}"
+                    state.deviceDetail[key2] = value2 << ["module_name" : moduleName]
+                    state.deviceState[key2] = value2.dashboard_data						
+                	}
             }
         }
+    }
 
-	return deviceList.sort() { it.value.toLowerCase() }
+return deviceList.sort() { it.value.toLowerCase() }
+
 }
+
 
 private removeChildDevices(delete) {
 	log.debug "In removeChildDevices"
