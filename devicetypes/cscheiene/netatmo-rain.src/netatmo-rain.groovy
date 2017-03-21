@@ -37,7 +37,7 @@ metadata {
             	attributeState "rain",label:'${currentValue}', icon:"st.Weather.weather12", backgroundColor:"#00a0dc"
             }
             tileAttribute ("rainSumHour", key: "SECONDARY_CONTROL") {
-				attributeState "rainSumHour", label:'${currentValue} Last Hour'
+				attributeState "rainSumHour", label:'Last Hour: ${currentValue}'
 			}
 		} 
  		valueTile("rainSumDay", "device.rainSumDay", width: 2, height: 2, inactiveLabel: false) {

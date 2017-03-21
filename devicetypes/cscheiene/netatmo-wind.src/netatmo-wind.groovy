@@ -41,7 +41,7 @@ metadata {
             	attributeState "WindStrength", label:'${currentValue}', icon:"st.Weather.weather1", backgroundColor:"#00a0dc"
             }
             tileAttribute ("WindAngle", key: "SECONDARY_CONTROL") {
-				attributeState "WindAngle", label:'${currentValue}°'
+				attributeState "WindAngle", label:'Direction: ${currentValue}°'
 			}
 		}        
  		valueTile("GustStrength", "device.GustStrength", width: 2, height: 2, inactiveLabel: false) {
