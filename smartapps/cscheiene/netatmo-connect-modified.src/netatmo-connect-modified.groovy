@@ -1,5 +1,5 @@
 /**
- * Netatmo Connect Date: 18.03.2017
+ * Netatmo Connect Date: 21.03.2017
  */
 
 import java.text.DecimalFormat
@@ -535,7 +535,7 @@ def poll() {
 				child?.sendEvent(name: 'carbonDioxide', value: data['CO2'])
 				child?.sendEvent(name: 'humidity', value: data['Humidity'])
 				child?.sendEvent(name: 'pressure', value: data['Pressure'])
-				child?.sendEvent(name: 'noise', value: data['Noise'])
+				child?.sendEvent(name: 'soundPressureLevel', value: data['Noise'])
                 child?.sendEvent(name: 'min_temp', value: cToPref(data['min_temp']) as float, unit: getTemperatureScale())
                 child?.sendEvent(name: 'max_temp', value: cToPref(data['max_temp']) as float, unit: getTemperatureScale())                
 				break;
