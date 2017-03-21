@@ -22,8 +22,8 @@ metadata {
 		capability "Temperature Measurement"
         capability "Sensor"
         capability "Carbon Dioxide Measurement"
+        capability "Sound Pressure Level"
 
-		attribute "noise", "number"
 		attribute "pressure", "number"
         attribute "min_temp", "number"
         attribute "max_temp", "number"
@@ -78,8 +78,8 @@ metadata {
                 [value: 1000, color: "#e86d13"]
  				]
  		}
- 		valueTile("noise", "device.noise", width: 2, height: 2, inactiveLabel: false) {
- 			state "noise", label:'${currentValue}db', unit:"Noise"
+ 		valueTile("soundPressureLevel", "device.soundPressureLevel", width: 2, height: 2, inactiveLabel: false) {
+ 			state "soundPressureLevel", label:'${currentValue}db', unit:"Noise"
  		}
  		valueTile("Pressure", "device.Pressure", width: 2, height: 1, inactiveLabel: false) {
  			state "Pressure", label:'${currentValue}', unit:"Pressure"
@@ -91,7 +91,7 @@ metadata {
  			state "default", action:"poll", icon:"st.secondary.refresh"
  		}
  		main(["main"])
- 		details(["main", "carbonDioxide", "noise", "Pressure", "units", "min_temp", "max_temp"])
+ 		details(["main", "carbonDioxide", "soundPressureLevel", "Pressure", "units", "min_temp", "max_temp"])
 	}
 }
 
