@@ -1,5 +1,5 @@
 /**
- *  netatmo-basestation Date: 13.03.2017
+ *  netatmo-basestation Date: 21.03.2017
  *
  *  Copyright 2014 Brian Steere
  *
@@ -22,6 +22,9 @@ metadata {
 		capability "Relative Humidity Measurement"
 		capability "Temperature Measurement"
         capability "Carbon Dioxide Measurement"
+        
+        attribute "min_temp", "number"
+        attribute "max_temp", "number"        
 
 	}
 

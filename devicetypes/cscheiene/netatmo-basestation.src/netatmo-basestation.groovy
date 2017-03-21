@@ -1,5 +1,5 @@
 /**
- *  netatmo-basestation Date: 11.03.2017
+ *  netatmo-basestation Date: 21.03.2017
  *
  *  Copyright 2014 Brian Steere
  *
@@ -23,8 +23,10 @@ metadata {
         capability "Sensor"
         capability "Carbon Dioxide Measurement"
 
-		attribute "noise", "string"
-		attribute "pressure", "string"
+		attribute "noise", "number"
+		attribute "pressure", "number"
+        attribute "min_temp", "number"
+        attribute "max_temp", "number"
 	}
 
 	simulator {

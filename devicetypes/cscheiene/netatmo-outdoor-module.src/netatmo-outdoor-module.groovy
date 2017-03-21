@@ -1,5 +1,5 @@
 /**
- *  netatmo-outdoor Date: 13.03.2017
+ *  netatmo-outdoor Date: 21.03.2017
  *
  *  Copyright 2014 Brian Steere
  *
@@ -23,6 +23,9 @@ metadata {
 		capability "Temperature Measurement"
         capability "Sensor"
         capability "Battery"
+        
+        attribute "min_temp", "number"
+        attribute "max_temp", "number"        
 	}
 
 	simulator {
