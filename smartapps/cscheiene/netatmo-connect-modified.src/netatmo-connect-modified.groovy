@@ -1,5 +1,5 @@
 /**
- * Netatmo Connect Date: 21.03.2017
+ * Netatmo Connect Date: 24.03.2017
  */
 
 import java.text.DecimalFormat
@@ -386,7 +386,7 @@ def uninstalled() {
 }
 
 def getDeviceList() {
-	log.debug "In getDeviceList"
+	log.debug "Refreshing station data"
 def deviceList = [:]
 def moduleName = null
 state.deviceDetail = [:]
@@ -517,10 +517,10 @@ def apiGet(String path, Closure callback) {
 }
 
 def poll() {
-	log.debug "In Poll"
+	log.debug "Polling"
 	getDeviceList();
 	def children = getChildDevices()
-    log.debug "State: ${state.deviceState}"
+    //log.debug "State: ${state.deviceState}"
 
 	settings.devices.each { deviceId ->
 		def detail = state?.deviceDetail[deviceId]
@@ -532,20 +532,20 @@ def poll() {
 			case 'NAMain':
 				log.debug "Updating NAMain $data"
 				child?.sendEvent(name: 'temperature', value: cToPref(data['Temperature']) as float, unit: getTemperatureScale())
-				child?.sendEvent(name: 'carbonDioxide', value: data['CO2'])
-				child?.sendEvent(name: 'humidity', value: data['Humidity'])
-				child?.sendEvent(name: 'pressure', value: data['Pressure'])
-				child?.sendEvent(name: 'soundPressureLevel', value: data['Noise'])
+				child?.sendEvent(name: 'carbonDioxide', value: data['CO2'], unit: "ppm")
+				child?.sendEvent(name: 'humidity', value: data['Humidity'], unit: "%")
+				child?.sendEvent(name: 'pressure', value: data['Pressure'], unit: settings.pressUnits)
+				child?.sendEvent(name: 'soundPressureLevel', value: data['Noise'], unit: "db")
                 child?.sendEvent(name: 'min_temp', value: cToPref(data['min_temp']) as float, unit: getTemperatureScale())
                 child?.sendEvent(name: 'max_temp', value: cToPref(data['max_temp']) as float, unit: getTemperatureScale())                
 				break;
 			case 'NAModule1':
 				log.debug "Updating NAModule1 $data"
 				child?.sendEvent(name: 'temperature', value: cToPref(data['Temperature']) as float, unit: getTemperatureScale())
-				child?.sendEvent(name: 'humidity', value: data['Humidity'])
+				child?.sendEvent(name: 'humidity', value: data['Humidity'], unit: "%")
                 child?.sendEvent(name: 'min_temp', value: cToPref(data['min_temp']) as float, unit: getTemperatureScale())
                 child?.sendEvent(name: 'max_temp', value: cToPref(data['max_temp']) as float, unit: getTemperatureScale())
-                child?.sendEvent(name: 'battery', value: detail['battery_percent'])
+                child?.sendEvent(name: 'battery', value: detail['battery_percent'], unit: "%")
 				break;
 			case 'NAModule3':
 				log.debug "Updating NAModule3 $data"
@@ -553,22 +553,22 @@ def poll() {
 				child?.sendEvent(name: 'rainSumHour', value: (rainToPref(data['sum_rain_1'])).toDouble().trunc(1), unit: settings.rainUnits)
 				child?.sendEvent(name: 'rainSumDay', value: (rainToPref(data['sum_rain_24'])).toDouble().trunc(1), unit: settings.rainUnits)
 				child?.sendEvent(name: 'units', value: settings.rainUnits)
-                child?.sendEvent(name: 'battery', value: detail['battery_percent'])
+                child?.sendEvent(name: 'battery', value: detail['battery_percent'], unit: "%")
 				break;
 			case 'NAModule4':
 				log.debug "Updating NAModule4 $data"
 				child?.sendEvent(name: 'temperature', value: cToPref(data['Temperature']) as float, unit: getTemperatureScale())
-				child?.sendEvent(name: 'carbonDioxide', value: data['CO2'])
-				child?.sendEvent(name: 'humidity', value: data['Humidity'])
+				child?.sendEvent(name: 'carbonDioxide', value: data['CO2'], unit: "ppm")
+				child?.sendEvent(name: 'humidity', value: data['Humidity'], unit: "%")
                 child?.sendEvent(name: 'min_temp', value: cToPref(data['min_temp']) as float, unit: getTemperatureScale())
                 child?.sendEvent(name: 'max_temp', value: cToPref(data['max_temp']) as float, unit: getTemperatureScale())
-                child?.sendEvent(name: 'battery', value: detail['battery_percent'])
+                child?.sendEvent(name: 'battery', value: detail['battery_percent'], unit: "%")
 				break;
             case 'NAModule2':
 				log.debug "Updating NAModule2 $data"
-				child?.sendEvent(name: 'WindAngle', value: data['WindAngle'])
-                child?.sendEvent(name: 'GustAngle', value: data['GustAngle'])
-                child?.sendEvent(name: 'battery', value: detail['battery_percent'])
+				child?.sendEvent(name: 'WindAngle', value: data['WindAngle'], unit: "°")
+                child?.sendEvent(name: 'GustAngle', value: data['GustAngle'], unit: "°")
+                child?.sendEvent(name: 'battery', value: detail['battery_percent'], unit: "%")
 				child?.sendEvent(name: 'WindStrength', value: (windToPref(data['WindStrength'])).toDouble().trunc(1), unit: settings.windUnits)
                 child?.sendEvent(name: 'GustStrength', value: (windToPref(data['GustStrength'])).toDouble().trunc(1), unit: settings.windUnits)
                 child?.sendEvent(name: 'max_wind_str', value: (windToPref(data['max_wind_str'])).toDouble().trunc(1), unit: settings.windUnits)
