@@ -1,5 +1,5 @@
 /**
- *  netatmo-windmodule Date: 20.03.2017
+ *  netatmo-windmodule Date: 24.03.2017
  *
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
@@ -51,13 +51,13 @@ metadata {
  			state "default", label:'${currentValue}° Gust'            
  		}
         valueTile("max_wind_str", "device.max_wind_str", width: 2, height: 2, inactiveLabel: false) {
- 			state "default", label:'${currentValue} Todays Max'            
+ 			state "default", label:'Max: ${currentValue}'            
  		}
         valueTile("units", "device.units", width: 2, height: 2, inactiveLabel: false) {
  			state "default", label:'Units: ${currentValue}'            
  		}
 		valueTile("battery", "device.battery", inactiveLabel: false, width: 2, height: 2) {
-			state "battery_percent", label:'${currentValue}% Battery', unit:"", backgroundColors:[
+			state "battery_percent", label:'Battery: ${currentValue}%', backgroundColors:[
                 [value: 20, color: "#ff0000"],
                 [value: 35, color: "#fd4e3a"],
                 [value: 50, color: "#fda63a"],
@@ -68,7 +68,7 @@ metadata {
             ]
 		}             
  		main (["main"])
- 		details(["main", "GustStrength", "GustAngle", "max_wind_str", "units", "battery"])
+ 		details(["main", "GustStrength", "GustAngle", "max_wind_str", "battery", "units"])
 	}
 }
 

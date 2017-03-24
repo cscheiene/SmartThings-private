@@ -1,5 +1,5 @@
 /**
- *  netatmo-outdoor Date: 21.03.2017
+ *  netatmo-outdoor Date: 24.03.2017
  *
  *  Copyright 2014 Brian Steere
  *
@@ -56,7 +56,7 @@ metadata {
  			state "max_temp", label: 'Max: ${currentValue}°'
  		}
 		valueTile("battery", "device.battery", inactiveLabel: false, width: 2, height: 2) {
-			state "battery_percent", label:'${currentValue}% Battery', unit:"", backgroundColors:[
+			state "battery_percent", label:'Battery: ${currentValue}%', unit:"", backgroundColors:[
                 [value: 20, color: "#ff0000"],
                 [value: 35, color: "#fd4e3a"],
                 [value: 50, color: "#fda63a"],
@@ -66,9 +66,6 @@ metadata {
                 [value: 99, color: "#55fd3a"]
             ]
 		}      
- 		standardTile("refresh", "device.thermostatMode", width: 2, height: 2, inactiveLabel: false, decoration: "flat") {
- 			state "default", action:"poll", icon:"st.secondary.refresh"
- 		}
  		main (["main"])
  		details(["main", "min_temp", "max_temp", "battery"])
 	}
@@ -77,11 +74,7 @@ metadata {
 // parse events into attributes
 def parse(String description) {
 	log.debug "Parsing '${description}'"
-	// TODO: handle 'humidity' attribute
-	// TODO: handle 'temperature' attribute
-	// TODO: handle 'carbonDioxide' attribute
-	// TODO: handle 'noise' attribute
-	// TODO: handle 'pressure' attribute
+
 
 }
 

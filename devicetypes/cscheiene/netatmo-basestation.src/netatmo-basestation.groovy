@@ -1,5 +1,5 @@
 /**
- *  netatmo-basestation Date: 21.03.2017
+ *  netatmo-basestation Date: 24.03.2017
  *
  *  Copyright 2014 Brian Steere
  *
@@ -69,27 +69,24 @@ metadata {
  			state "max_temp", label: 'Max: ${currentValue}°'
  		}        
  		valueTile("humidity", "device.humidity", inactiveLabel: false) {
- 			state "humidity", label:'${currentValue}%', unit:"Humidity"
+ 			state "humidity", label:'${currentValue}%'
  		}
  		valueTile("carbonDioxide", "device.carbonDioxide", width: 2, height: 2, inactiveLabel: false) {
- 			state "carbonDioxide", label:'${currentValue}ppm', unit:"CO2", backgroundColors: [
+ 			state "carbonDioxide", label:'${currentValue}ppm', backgroundColors: [
  				[value: 600, color: "#44B621"],
                 [value: 999, color: "#ffcc00"],
                 [value: 1000, color: "#e86d13"]
  				]
  		}
  		valueTile("soundPressureLevel", "device.soundPressureLevel", width: 2, height: 2, inactiveLabel: false) {
- 			state "soundPressureLevel", label:'${currentValue}db', unit:"Noise"
+ 			state "soundPressureLevel", label:'${currentValue}db'
  		}
  		valueTile("Pressure", "device.Pressure", width: 2, height: 1, inactiveLabel: false) {
- 			state "Pressure", label:'${currentValue}', unit:"Pressure"
+ 			state "Pressure", label:'${currentValue}'
  		}
         valueTile("units", "units", width: 2, height: 1, inactiveLabel: false) {
  			state "default", label:'${currentValue}'            
  		}        
- 		standardTile("refresh", "device.pressure", width: 2, height: 2, inactiveLabel: false, decoration: "flat") {
- 			state "default", action:"poll", icon:"st.secondary.refresh"
- 		}
  		main(["main"])
  		details(["main", "carbonDioxide", "soundPressureLevel", "Pressure", "units", "min_temp", "max_temp"])
 	}
@@ -98,10 +95,6 @@ metadata {
 // parse events into attributes
 def parse(String description) {
 	log.debug "Parsing '${description}'"
-	// TODO: handle 'humidity' attribute
-	// TODO: handle 'temperature' attribute
-	// TODO: handle 'carbonDioxide' attribute
-	// TODO: handle 'noise' attribute
 	// TODO: handle 'pressure' attribute
 
 }
