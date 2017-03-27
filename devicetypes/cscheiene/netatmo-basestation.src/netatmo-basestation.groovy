@@ -1,5 +1,5 @@
 /**
- *  netatmo-basestation Date: 24.03.2017
+ *  netatmo-basestation Date: 27.03.2017
  *
  *  Copyright 2014 Brian Steere
  *
@@ -50,7 +50,7 @@ metadata {
 				attributeState "humidity", label:'Humidity: ${currentValue}%'
 			}
 		} 
-		valueTile("temperature", "device.temperature", width: 2, height: 2, canChangeIcon: false) {
+		valueTile("temperature", "device.temperature") {
  			state("temperature", label: '${currentValue}°', icon:"st.Weather.weather2", backgroundColors: [
  				[value: 31, color: "#153591"],
  				[value: 44, color: "#1e9cbb"],
@@ -81,14 +81,14 @@ metadata {
  		valueTile("soundPressureLevel", "device.soundPressureLevel", width: 2, height: 2, inactiveLabel: false) {
  			state "soundPressureLevel", label:'${currentValue}db'
  		}
- 		valueTile("Pressure", "device.Pressure", width: 2, height: 1, inactiveLabel: false) {
- 			state "Pressure", label:'${currentValue}'
+ 		valueTile("pressure", "device.pressure", width: 2, height: 1, inactiveLabel: false) {
+ 			state "pressure", label:'${currentValue}'
  		}
         valueTile("units", "units", width: 2, height: 1, inactiveLabel: false) {
  			state "default", label:'${currentValue}'            
  		}        
- 		main(["main"])
- 		details(["main", "carbonDioxide", "soundPressureLevel", "Pressure", "units", "min_temp", "max_temp"])
+ 		main(["temperature"])
+ 		details(["main", "carbonDioxide", "soundPressureLevel", "pressure", "units", "min_temp", "max_temp"])
 	}
 }
 
