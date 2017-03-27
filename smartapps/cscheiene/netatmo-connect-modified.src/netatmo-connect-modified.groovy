@@ -1,5 +1,5 @@
 /**
- * Netatmo Connect Date: 24.03.2017
+ * Netatmo Connect Date: 27.03.2017
  */
 
 import java.text.DecimalFormat
@@ -537,7 +537,8 @@ def poll() {
 				child?.sendEvent(name: 'pressure', value: data['Pressure'], unit: settings.pressUnits)
 				child?.sendEvent(name: 'soundPressureLevel', value: data['Noise'], unit: "db")
                 child?.sendEvent(name: 'min_temp', value: cToPref(data['min_temp']) as float, unit: getTemperatureScale())
-                child?.sendEvent(name: 'max_temp', value: cToPref(data['max_temp']) as float, unit: getTemperatureScale())                
+                child?.sendEvent(name: 'max_temp', value: cToPref(data['max_temp']) as float, unit: getTemperatureScale())
+                child?.sendEvent(name: 'units', value: settings.pressUnits)
 				break;
 			case 'NAModule1':
 				log.debug "Updating NAModule1 $data"
