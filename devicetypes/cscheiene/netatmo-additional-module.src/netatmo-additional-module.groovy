@@ -1,5 +1,5 @@
 /**
- *  netatmo-basestation Date: 27.03.2017
+ *  netatmo-basestation Date: 15.05.2017
  *
  *  Copyright 2014 Brian Steere
  *
@@ -24,7 +24,8 @@ metadata {
         capability "Carbon Dioxide Measurement"
         
         attribute "min_temp", "number"
-        attribute "max_temp", "number"        
+        attribute "max_temp", "number"
+        attribute "temp_trend", "string"
 
 	}
 
@@ -35,19 +36,19 @@ metadata {
 	tiles (scale: 2) {
 		multiAttributeTile(name:"main", type:"generic", width:6, height:4) {
 			tileAttribute("temperature", key: "PRIMARY_CONTROL") {
-            	attributeState "temperature",label:'${currentValue}°', icon:"st.Weather.weather2", backgroundColors:[
-                	[value: 32, color: "#153591"],
-                    [value: 44, color: "#1e9cbb"],
-                    [value: 59, color: "#90d2a7"],
-					[value: 74, color: "#44b621"],
-					[value: 84, color: "#f1d801"],
-					[value: 92, color: "#d04e00"],
-					[value: 98, color: "#bc2323"]
-				]
+            	attributeState "temperature", label:'${currentValue}°', icon:"st.Weather.weather2", backgroundColors:[
+ 				[value: 31, color: "#153591"],
+ 				[value: 44, color: "#1e9cbb"],
+ 				[value: 59, color: "#90d2a7"],
+ 				[value: 74, color: "#44b621"],
+ 				[value: 84, color: "#f1d801"],
+ 				[value: 95, color: "#d04e00"],
+ 				[value: 96, color: "#bc2323"]
+ 				]
             }
             tileAttribute ("humidity", key: "SECONDARY_CONTROL") {
 				attributeState "humidity", label:'Humidity: ${currentValue}%'
-			}
+			}           
 		} 
  		valueTile("carbonDioxide", "device.carbonDioxide", width: 2, height: 2, inactiveLabel: false) {
  			state "carbonDioxide", label:'${currentValue}ppm', unit:"CO2", backgroundColors: [
@@ -62,6 +63,9 @@ metadata {
         valueTile("max_temp", "max_temp", width: 2, height: 2) {
  			state "max_temp", label: 'Max: ${currentValue}°'
  		}
+        valueTile("temp_trend", "temp_trend", width: 2, height: 2) {
+ 			state "temp_trend", label: 'Trend: ${currentValue}'
+ 		}         
 		valueTile("battery", "device.battery", inactiveLabel: false, width: 2, height: 2) {
 			state "battery_percent", label:'Battery: ${currentValue}%', backgroundColors:[
                 [value: 20, color: "#ff0000"],
@@ -85,8 +89,8 @@ metadata {
  				]
  				)
  		}
- 		main "temperature"
- 		details(["main","carbonDioxide","min_temp","max_temp", "battery"])
+ 		main "main" // IOS users! If you want color with the temperature in the "Things" overview, replace "main" with "temperature"
+ 		details(["main","min_temp","max_temp", "temp_trend","carbonDioxide", "battery"])
 	}
 }
 

@@ -1,5 +1,5 @@
 /**
- *  netatmo-outdoor Date: 27.03.2017
+ *  netatmo-outdoor Date: 15.05.2017
  *
  *  Copyright 2014 Brian Steere
  *
@@ -14,7 +14,7 @@
  *
  *  Based on Brian Steere's netatmo-outdoor DTH
  *
- *  Date: 10/03-2017
+ *  
  * 
  */
 metadata {
@@ -25,7 +25,8 @@ metadata {
         capability "Battery"
         
         attribute "min_temp", "number"
-        attribute "max_temp", "number"        
+        attribute "max_temp", "number"   
+        attribute "temp_trend", "string"
 	}
 
 	simulator {
@@ -55,6 +56,9 @@ metadata {
         valueTile("max_temp", "max_temp", width: 2, height: 2) {
  			state "max_temp", label: 'Max: ${currentValue}°'
  		}
+        valueTile("temp_trend", "temp_trend", width: 2, height: 2) {
+ 			state "temp_trend", label: 'Trend: ${currentValue}'
+ 		}        
 		valueTile("battery", "device.battery", inactiveLabel: false, width: 2, height: 2) {
 			state "battery_percent", label:'Battery: ${currentValue}%', unit:"", backgroundColors:[
                 [value: 20, color: "#ff0000"],
@@ -78,8 +82,8 @@ metadata {
  				]
  				)
  		}        
- 		main (["temperature"])
- 		details(["main", "min_temp", "max_temp", "battery"])
+ 		main (["main"]) // IOS users! If you want color with the temperature in the "Things" overview, replace "main" with "temperature"
+ 		details(["main", "min_temp", "max_temp", "temp_trend", "battery"])
 	}
 }
 

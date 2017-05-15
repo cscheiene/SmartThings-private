@@ -1,5 +1,5 @@
 /**
- *  netatmo-basestation Date: 27.03.2017
+ *  netatmo-basestation Date: 15.05.2017
  *
  *  Copyright 2014 Brian Steere
  *
@@ -27,6 +27,7 @@ metadata {
 		attribute "pressure", "number"
         attribute "min_temp", "number"
         attribute "max_temp", "number"
+        attribute "temp_trend", "string"
 	}
 
 	simulator {
@@ -71,6 +72,9 @@ metadata {
  		valueTile("humidity", "device.humidity", inactiveLabel: false) {
  			state "humidity", label:'${currentValue}%'
  		}
+        valueTile("temp_trend", "temp_trend", width: 2, height: 2) {
+ 			state "temp_trend", label: 'Trend: ${currentValue}'
+ 		}            
  		valueTile("carbonDioxide", "device.carbonDioxide", width: 2, height: 2, inactiveLabel: false) {
  			state "carbonDioxide", label:'${currentValue}ppm', backgroundColors: [
  				[value: 600, color: "#44B621"],
@@ -87,8 +91,8 @@ metadata {
         valueTile("units", "units", width: 2, height: 1, inactiveLabel: false) {
  			state "default", label:'${currentValue}'            
  		}        
- 		main(["temperature"])
- 		details(["main", "carbonDioxide", "soundPressureLevel", "pressure", "units", "min_temp", "max_temp"])
+ 		main(["main"]) // IOS users! If you want color with the temperature in the "Things" overview, replace "main" with "temperature"
+ 		details(["main", "carbonDioxide", "soundPressureLevel", "pressure", "units", "min_temp", "max_temp", "temp_trend"])
 	}
 }
 

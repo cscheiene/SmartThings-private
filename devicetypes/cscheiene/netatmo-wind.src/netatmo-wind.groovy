@@ -1,5 +1,5 @@
 /**
- *  netatmo-windmodule Date: 27.03.2017
+ *  netatmo-windmodule Date: 15.05.2017
  *
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
@@ -70,7 +70,7 @@ metadata {
 		valueTile("WindStrength", "device.WindStrength") {
  			state "WindStrength",label:'${currentValue}', icon:"st.Weather.weather1", backgroundColor:"#00a0dc"
  		}        
- 		main (["WindStrength"])
+ 		main (["main"])
  		details(["main", "GustStrength", "GustAngle", "max_wind_str", "battery", "units"])
 	}
 }
