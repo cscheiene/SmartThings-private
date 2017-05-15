@@ -1,5 +1,5 @@
 /**
- * Netatmo Connect Date: 27.03.2017
+ * Netatmo Connect Date: 15.05.2017
  */
 
 import java.text.DecimalFormat
@@ -534,6 +534,7 @@ def poll() {
 				child?.sendEvent(name: 'temperature', value: cToPref(data['Temperature']) as float, unit: getTemperatureScale())
 				child?.sendEvent(name: 'carbonDioxide', value: data['CO2'], unit: "ppm")
 				child?.sendEvent(name: 'humidity', value: data['Humidity'], unit: "%")
+                child?.sendEvent(name: 'temp_trend', value: data['temp_trend'], unit: "")                
 				child?.sendEvent(name: 'pressure', value: data['Pressure'], unit: settings.pressUnits)
 				child?.sendEvent(name: 'soundPressureLevel', value: data['Noise'], unit: "db")
                 child?.sendEvent(name: 'min_temp', value: cToPref(data['min_temp']) as float, unit: getTemperatureScale())
@@ -544,6 +545,7 @@ def poll() {
 				log.debug "Updating NAModule1 $data"
 				child?.sendEvent(name: 'temperature', value: cToPref(data['Temperature']) as float, unit: getTemperatureScale())
 				child?.sendEvent(name: 'humidity', value: data['Humidity'], unit: "%")
+                child?.sendEvent(name: 'temp_trend', value: data['temp_trend'], unit: "")
                 child?.sendEvent(name: 'min_temp', value: cToPref(data['min_temp']) as float, unit: getTemperatureScale())
                 child?.sendEvent(name: 'max_temp', value: cToPref(data['max_temp']) as float, unit: getTemperatureScale())
                 child?.sendEvent(name: 'battery', value: detail['battery_percent'], unit: "%")
@@ -561,6 +563,7 @@ def poll() {
 				child?.sendEvent(name: 'temperature', value: cToPref(data['Temperature']) as float, unit: getTemperatureScale())
 				child?.sendEvent(name: 'carbonDioxide', value: data['CO2'], unit: "ppm")
 				child?.sendEvent(name: 'humidity', value: data['Humidity'], unit: "%")
+                child?.sendEvent(name: 'temp_trend', value: data['temp_trend'], unit: "")                
                 child?.sendEvent(name: 'min_temp', value: cToPref(data['min_temp']) as float, unit: getTemperatureScale())
                 child?.sendEvent(name: 'max_temp', value: cToPref(data['max_temp']) as float, unit: getTemperatureScale())
                 child?.sendEvent(name: 'battery', value: detail['battery_percent'], unit: "%")
