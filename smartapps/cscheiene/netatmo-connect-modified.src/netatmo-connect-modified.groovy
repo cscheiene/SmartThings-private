@@ -537,6 +537,7 @@ def poll() {
                 child?.sendEvent(name: 'temp_trend', value: data['temp_trend'], unit: "")                
 				child?.sendEvent(name: 'pressure', value: data['Pressure'], unit: settings.pressUnits)
 				child?.sendEvent(name: 'soundPressureLevel', value: data['Noise'], unit: "db")
+                child?.sendEvent(name: 'pressure_trend', value: data['pressure_trend'], unit: "")
                 child?.sendEvent(name: 'min_temp', value: cToPref(data['min_temp']) as float, unit: getTemperatureScale())
                 child?.sendEvent(name: 'max_temp', value: cToPref(data['max_temp']) as float, unit: getTemperatureScale())
                 child?.sendEvent(name: 'units', value: settings.pressUnits)
