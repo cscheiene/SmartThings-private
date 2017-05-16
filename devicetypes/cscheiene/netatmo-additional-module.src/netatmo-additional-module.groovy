@@ -1,5 +1,5 @@
 /**
- *  netatmo-basestation Date: 15.05.2017
+ *  netatmo-basestation Date: 16.05.2017
  *
  *  Copyright 2014 Brian Steere
  *
@@ -57,14 +57,14 @@ metadata {
                 [value: 1000, color: "#e86d13"]
  				]
  		}
-        valueTile("min_temp", "min_temp", width: 2, height: 2) {
+        valueTile("min_temp", "min_temp", width: 2, height: 1) {
  			state "min_temp", label: 'Min: ${currentValue}°'
  		}
-        valueTile("max_temp", "max_temp", width: 2, height: 2) {
+        valueTile("max_temp", "max_temp", width: 2, height: 1) {
  			state "max_temp", label: 'Max: ${currentValue}°'
  		}
-        valueTile("temp_trend", "temp_trend", width: 2, height: 2) {
- 			state "temp_trend", label: 'Trend: ${currentValue}'
+        valueTile("temp_trend", "temp_trend", width: 4, height: 1) {
+ 			state "temp_trend", label: 'Temp Trend: ${currentValue}'
  		}         
 		valueTile("battery", "device.battery", inactiveLabel: false, width: 2, height: 2) {
 			state "battery_percent", label:'Battery: ${currentValue}%', backgroundColors:[
@@ -90,7 +90,7 @@ metadata {
  				)
  		}
  		main "main" // IOS users! If you want color with the temperature in the "Things" overview, replace "main" with "temperature"
- 		details(["main","min_temp","max_temp", "temp_trend","carbonDioxide", "battery"])
+ 		details(["main","min_temp","max_temp","carbonDioxide", "temp_trend", "battery"])
 	}
 }
 

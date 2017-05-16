@@ -1,5 +1,5 @@
 /**
- *  netatmo-basestation Date: 15.05.2017
+ *  netatmo-basestation Date: 16.05.2017
  *
  *  Copyright 2014 Brian Steere
  *
@@ -28,6 +28,7 @@ metadata {
         attribute "min_temp", "number"
         attribute "max_temp", "number"
         attribute "temp_trend", "string"
+        attribute "pressure_trend", "string"
 	}
 
 	simulator {
@@ -63,18 +64,21 @@ metadata {
  				]
  				)
  		}
-        		valueTile("min_temp", "min_temp", width: 2, height: 2) {
+        valueTile("min_temp", "min_temp", width: 2, height: 1) {
  			state "min_temp", label: 'Min: ${currentValue}°'
  		}
-        		valueTile("max_temp", "max_temp", width: 2, height: 2) {
+        valueTile("max_temp", "max_temp", width: 2, height: 1) {
  			state "max_temp", label: 'Max: ${currentValue}°'
  		}        
  		valueTile("humidity", "device.humidity", inactiveLabel: false) {
  			state "humidity", label:'${currentValue}%'
  		}
-        valueTile("temp_trend", "temp_trend", width: 2, height: 2) {
- 			state "temp_trend", label: 'Trend: ${currentValue}'
- 		}            
+        valueTile("temp_trend", "temp_trend", width: 4, height: 1) {
+ 			state "temp_trend", label: 'Temp Trend: ${currentValue}'
+ 		}
+        valueTile("pressure_trend", "pressure_trend", width: 4, height: 1) {
+ 			state "pressure_trend", label: 'Press Trend: ${currentValue}'
+ 		}           
  		valueTile("carbonDioxide", "device.carbonDioxide", width: 2, height: 2, inactiveLabel: false) {
  			state "carbonDioxide", label:'${currentValue}ppm', backgroundColors: [
  				[value: 600, color: "#44B621"],
@@ -92,7 +96,7 @@ metadata {
  			state "default", label:'${currentValue}'            
  		}        
  		main(["main"]) // IOS users! If you want color with the temperature in the "Things" overview, replace "main" with "temperature"
- 		details(["main", "carbonDioxide", "soundPressureLevel", "pressure", "units", "min_temp", "max_temp", "temp_trend"])
+ 		details(["main", "min_temp", "max_temp", "carbonDioxide", "temp_trend", "pressure", "units", "pressure_trend", "soundPressureLevel"])
 	}
 }
 

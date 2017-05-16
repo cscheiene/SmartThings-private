@@ -1,5 +1,5 @@
 /**
- *  netatmo-outdoor Date: 15.05.2017
+ *  netatmo-outdoor Date: 16.05.2017
  *
  *  Copyright 2014 Brian Steere
  *
@@ -50,14 +50,14 @@ metadata {
 				attributeState "humidity", label:'Humidity: ${currentValue}%'
 			}
 		} 
-        valueTile("min_temp", "min_temp", width: 2, height: 2) {
+        valueTile("min_temp", "min_temp", width: 2, height: 1) {
  			state "min_temp", label: 'Min: ${currentValue}°'
  		}
-        valueTile("max_temp", "max_temp", width: 2, height: 2) {
+        valueTile("max_temp", "max_temp", width: 2, height: 1) {
  			state "max_temp", label: 'Max: ${currentValue}°'
  		}
-        valueTile("temp_trend", "temp_trend", width: 2, height: 2) {
- 			state "temp_trend", label: 'Trend: ${currentValue}'
+        valueTile("temp_trend", "temp_trend", width: 4, height: 1) {
+ 			state "temp_trend", label: 'Temp Trend: ${currentValue}'
  		}        
 		valueTile("battery", "device.battery", inactiveLabel: false, width: 2, height: 2) {
 			state "battery_percent", label:'Battery: ${currentValue}%', unit:"", backgroundColors:[
