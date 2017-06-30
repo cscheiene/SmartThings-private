@@ -51,7 +51,7 @@ metadata {
  			state "default", label:'${currentValue}° Gust'            
  		}
         valueTile("max_wind_str", "device.max_wind_str", width: 2, height: 2, inactiveLabel: false) {
- 			state "default", label:'Max: ${currentValue}'            
+ 			state "default", label:'${currentValue} Max'            
  		}
         valueTile("units", "device.units", width: 2, height: 2, inactiveLabel: false) {
  			state "default", label:'Units: ${currentValue}'            
