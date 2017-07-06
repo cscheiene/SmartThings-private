@@ -1,5 +1,5 @@
 /**
- * Netatmo Connect Date: 15.05.2017
+ * Netatmo Connect Date: 06.07.2017
  */
 
 import java.text.DecimalFormat
@@ -520,7 +520,7 @@ def poll() {
 	log.debug "Polling"
 	getDeviceList();
 	def children = getChildDevices()
-    //log.debug "State: ${state.deviceState}"
+    log.debug "State: ${state.deviceState}"
 
 	settings.devices.each { deviceId ->
 		def detail = state?.deviceDetail[deviceId]
@@ -541,6 +541,7 @@ def poll() {
                 child?.sendEvent(name: 'min_temp', value: cToPref(data['min_temp']) as float, unit: getTemperatureScale())
                 child?.sendEvent(name: 'max_temp', value: cToPref(data['max_temp']) as float, unit: getTemperatureScale())
                 child?.sendEvent(name: 'units', value: settings.pressUnits)
+                child?.sendEvent(name: 'lastupdate', value: lastUpdated(data['time_utc']), unit: "")
 				break;
 			case 'NAModule1':
 				log.debug "Updating NAModule1 $data"
@@ -550,6 +551,7 @@ def poll() {
                 child?.sendEvent(name: 'min_temp', value: cToPref(data['min_temp']) as float, unit: getTemperatureScale())
                 child?.sendEvent(name: 'max_temp', value: cToPref(data['max_temp']) as float, unit: getTemperatureScale())
                 child?.sendEvent(name: 'battery', value: detail['battery_percent'], unit: "%")
+                child?.sendEvent(name: 'lastupdate', value: lastUpdated(data['time_utc']), unit: "")
 				break;
 			case 'NAModule3':
 				log.debug "Updating NAModule3 $data"
@@ -558,6 +560,7 @@ def poll() {
 				child?.sendEvent(name: 'rainSumDay', value: (rainToPref(data['sum_rain_24'])).toDouble().trunc(1), unit: settings.rainUnits)
 				child?.sendEvent(name: 'units', value: settings.rainUnits)
                 child?.sendEvent(name: 'battery', value: detail['battery_percent'], unit: "%")
+                child?.sendEvent(name: 'lastupdate', value: lastUpdated(data['time_utc']), unit: "")
 				break;
 			case 'NAModule4':
 				log.debug "Updating NAModule4 $data"
@@ -568,6 +571,7 @@ def poll() {
                 child?.sendEvent(name: 'min_temp', value: cToPref(data['min_temp']) as float, unit: getTemperatureScale())
                 child?.sendEvent(name: 'max_temp', value: cToPref(data['max_temp']) as float, unit: getTemperatureScale())
                 child?.sendEvent(name: 'battery', value: detail['battery_percent'], unit: "%")
+                child?.sendEvent(name: 'lastupdate', value: lastUpdated(data['time_utc']), unit: "")
 				break;
             case 'NAModule2':
 				log.debug "Updating NAModule2 $data"
@@ -578,6 +582,7 @@ def poll() {
                 child?.sendEvent(name: 'GustStrength', value: (windToPref(data['GustStrength'])).toDouble().trunc(1), unit: settings.windUnits)
                 child?.sendEvent(name: 'max_wind_str', value: (windToPref(data['max_wind_str'])).toDouble().trunc(1), unit: settings.windUnits)
                 child?.sendEvent(name: 'units', value: settings.windUnits)
+                child?.sendEvent(name: 'lastupdate', value: lastUpdated(data['time_utc']), unit: "")
  				break;
 		}
 	}
@@ -618,6 +623,10 @@ def windToPref(Wind) {
     	return Wind * 0.539956803
     }
 }
+def lastUpdated(time) {
+    def updtTime = new Date(time*1000L).format("h:mm aa", location.timeZone)
+    state.lastUpdated = updtTime
+    return updtTime }
 
 def debugEvent(message, displayEvent) {
 
