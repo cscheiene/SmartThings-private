@@ -1,5 +1,5 @@
 /**
- *  netatmo-windmodule Date: 15.05.2017
+ *  netatmo-windmodule Date: 06.07.2017
  *
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
@@ -53,7 +53,7 @@ metadata {
         valueTile("max_wind_str", "device.max_wind_str", width: 2, height: 2, inactiveLabel: false) {
  			state "default", label:'${currentValue} Max'            
  		}
-        valueTile("units", "device.units", width: 2, height: 2, inactiveLabel: false) {
+        valueTile("units", "device.units", width: 4, height: 1, inactiveLabel: false) {
  			state "default", label:'Units: ${currentValue}'            
  		}
 		valueTile("battery", "device.battery", inactiveLabel: false, width: 2, height: 2) {
@@ -70,8 +70,11 @@ metadata {
 		valueTile("WindStrength", "device.WindStrength") {
  			state "WindStrength",label:'${currentValue}', icon:"st.Weather.weather1", backgroundColor:"#00a0dc"
  		}        
- 		main (["main"])
- 		details(["main", "GustStrength", "GustAngle", "max_wind_str", "battery", "units"])
+ 		valueTile("lastupdate", "lastupdate", width: 4, height: 1, inactiveLabel: false) { 			state "default", label:"Last updated: " + '${currentValue}' 		}        
+        
+        
+        main (["main"])
+ 		details(["main", "GustStrength", "GustAngle", "max_wind_str", "units", "lastupdate","battery"  ])
 	}
 }
 

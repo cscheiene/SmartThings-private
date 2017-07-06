@@ -1,5 +1,5 @@
 /**
- *  netatmo-basestation Date: 16.05.2017
+ *  netatmo-basestation Date: 06.07.2017
  *
  *  Copyright 2014 Brian Steere
  *
@@ -94,9 +94,13 @@ metadata {
  		}
         valueTile("units", "units", width: 2, height: 1, inactiveLabel: false) {
  			state "default", label:'${currentValue}'            
- 		}        
- 		main(["main"]) // IOS users! If you want color with the temperature in the "Things" overview, replace "main" with "temperature"
- 		details(["main", "min_temp", "max_temp", "carbonDioxide", "temp_trend", "pressure", "units", "pressure_trend", "soundPressureLevel"])
+ 		}
+        valueTile("lastupdate", "lastupdate", width: 4, height: 1, inactiveLabel: false) { 			
+        state "default", label:"Last updated: " + '${currentValue}' 		
+        }  		
+        
+        main(["main"]) // IOS users! If you want color with the temperature in the "Things" overview, replace "main" with "temperature"
+ 		details(["main", "min_temp", "max_temp", "carbonDioxide", "temp_trend", "pressure", "units", "pressure_trend", "soundPressureLevel", "lastupdate"])
 	}
 }
 

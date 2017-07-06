@@ -1,5 +1,5 @@
 /**
- *  netatmo-rain module Date: 15.05.2017
+ *  netatmo-rain module Date: 06.07.2017
  *
  *  Copyright 2014 Brian Steere
  *
@@ -60,8 +60,11 @@ metadata {
 		valueTile("rain", "device.rain") {
  			state "rain",label:'${currentValue}', icon:"st.Weather.weather12", backgroundColor:"#00a0dc"
  		}
- 		main (["main"])
- 		details(["main", "rainSumDay", "battery", "units"])
+ 		
+        valueTile("lastupdate", "lastupdate", width: 4, height: 1, inactiveLabel: false) { 			state "default", label:"Last updated: " + '${currentValue}' 		}        
+        
+        main (["main"])
+ 		details(["main", "rainSumDay", "battery", "units", "lastupdate" ])
 	}
 }
 
