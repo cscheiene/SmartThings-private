@@ -542,6 +542,8 @@ def poll() {
                 child?.sendEvent(name: 'max_temp', value: cToPref(data['max_temp']) as float, unit: getTemperatureScale())
                 child?.sendEvent(name: 'units', value: settings.pressUnits)
                 child?.sendEvent(name: 'lastupdate', value: lastUpdated(data['time_utc']), unit: "")
+                child?.sendEvent(name: 'date_min_temp', value: lastUpdated(data['date_min_temp']), unit: "")
+                child?.sendEvent(name: 'date_max_temp', value: lastUpdated(data['date_max_temp']), unit: "")
 				break;
 			case 'NAModule1':
 				log.debug "Updating NAModule1 $data"
@@ -552,6 +554,8 @@ def poll() {
                 child?.sendEvent(name: 'max_temp', value: cToPref(data['max_temp']) as float, unit: getTemperatureScale())
                 child?.sendEvent(name: 'battery', value: detail['battery_percent'], unit: "%")
                 child?.sendEvent(name: 'lastupdate', value: lastUpdated(data['time_utc']), unit: "")
+                child?.sendEvent(name: 'date_min_temp', value: lastUpdated(data['date_min_temp']), unit: "")
+                child?.sendEvent(name: 'date_max_temp', value: lastUpdated(data['date_max_temp']), unit: "")
 				break;
 			case 'NAModule3':
 				log.debug "Updating NAModule3 $data"
@@ -560,7 +564,7 @@ def poll() {
 				child?.sendEvent(name: 'rainSumDay', value: (rainToPref(data['sum_rain_24'])).toDouble().trunc(1), unit: settings.rainUnits)
 				child?.sendEvent(name: 'units', value: settings.rainUnits)
                 child?.sendEvent(name: 'battery', value: detail['battery_percent'], unit: "%")
-                child?.sendEvent(name: 'lastupdate', value: lastUpdated(data['time_utc']), unit: "")
+                child?.sendEvent(name: 'lastupdate', value: lastUpdated(data['time_utc']), unit: "")              
 				break;
 			case 'NAModule4':
 				log.debug "Updating NAModule4 $data"
@@ -572,6 +576,8 @@ def poll() {
                 child?.sendEvent(name: 'max_temp', value: cToPref(data['max_temp']) as float, unit: getTemperatureScale())
                 child?.sendEvent(name: 'battery', value: detail['battery_percent'], unit: "%")
                 child?.sendEvent(name: 'lastupdate', value: lastUpdated(data['time_utc']), unit: "")
+                child?.sendEvent(name: 'date_min_temp', value: lastUpdated(data['date_min_temp']), unit: "")
+                child?.sendEvent(name: 'date_max_temp', value: lastUpdated(data['date_max_temp']), unit: "")
 				break;
             case 'NAModule2':
 				log.debug "Updating NAModule2 $data"
