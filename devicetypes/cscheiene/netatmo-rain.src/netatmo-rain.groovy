@@ -19,10 +19,12 @@ metadata {
 	definition (name: "Netatmo Rain", namespace: "cscheiene", author: "Brian Steere,cscheiene") {
 	    capability "Sensor"
         capability "Battery"
+        
         attribute "rain", "number"
         attribute "rainSumHour", "number"
         attribute "rainSumDay", "number"
         attribute "units", "string"
+        attribute "lastupdate", "string"
         
         command "poll"
 	}
@@ -30,7 +32,12 @@ metadata {
 	simulator {
 		// TODO: define status and reply messages here
 	}
-
+    
+    preferences {
+        input title: "Settings", description: "To change units, go to the Netatmo Connect App", displayDuringSetup: false, type: "paragraph", element: "paragraph"
+        input title: "Information", description: "Your Netatmo station updates the Netatmo servers approximately every 10 minutes. The Netatmo Connect app polls these servers every 5 minutes. If the time of last update is equal to or less than 10 minutes, pressing the refresh button will have no effect", displayDuringSetup: false, type: "paragraph", element: "paragraph"
+    }
+    
 	tiles (scale: 2) {
 		multiAttributeTile(name:"main", type:"generic", width:6, height:4) {
 			tileAttribute("rain", key: "PRIMARY_CONTROL") {
@@ -61,10 +68,14 @@ metadata {
  			state "rain",label:'${currentValue}', icon:"st.Weather.weather12", backgroundColor:"#00a0dc"
  		}
  		
-        valueTile("lastupdate", "lastupdate", width: 4, height: 1, inactiveLabel: false) { 			state "default", label:"Last updated: " + '${currentValue}' 		}        
-        
+        valueTile("lastupdate", "lastupdate", width: 4, height: 1, inactiveLabel: false) {
+            state "default", label:"Last updated: " + '${currentValue}'
+        }        
+        valueTile("refresh", "device.refresh", width: 2, height: 1, inactiveLabel: false) {
+ 			state "default", label:'Refresh', action:"refresh", icon:"st.secondary.refresh-icon"           
+ 		}        
         main (["main"])
- 		details(["main", "rainSumDay", "battery", "units", "lastupdate" ])
+ 		details(["main", "rainSumDay", "battery", "units", "lastupdate" ,"refresh"])
 	}
 }
 
@@ -74,5 +85,8 @@ def parse(String description) {
 }
 
 def poll() {
+	parent.poll()
+}
+def refresh() {
 	parent.poll()
 }

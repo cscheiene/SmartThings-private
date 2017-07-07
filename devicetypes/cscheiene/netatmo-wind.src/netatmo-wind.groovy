@@ -27,6 +27,7 @@ metadata {
         attribute "GustAngle", "number"
         attribute "max_wind_str", "number"
         attribute "units", "string"
+        attribute "lastupdate", "string"
         
         command "poll"
 	}
@@ -35,6 +36,11 @@ metadata {
 		// TODO: define status and reply messages here
 	}
 
+    preferences {
+        input title: "Settings", description: "To change units, go to the Netatmo Connect App", displayDuringSetup: false, type: "paragraph", element: "paragraph"
+        input title: "Information", description: "Your Netatmo station updates the Netatmo servers approximately every 10 minutes. The Netatmo Connect app polls these servers every 5 minutes. If the time of last update is equal to or less than 10 minutes, pressing the refresh button will have no effect", displayDuringSetup: false, type: "paragraph", element: "paragraph"
+    }  
+    
 	tiles (scale: 2) {
 		multiAttributeTile(name:"main", type:"generic", width:6, height:4) {
 			tileAttribute("WindStrength", key: "PRIMARY_CONTROL") {
@@ -53,7 +59,7 @@ metadata {
         valueTile("max_wind_str", "device.max_wind_str", width: 2, height: 2, inactiveLabel: false) {
  			state "default", label:'${currentValue} Max'            
  		}
-        valueTile("units", "device.units", width: 4, height: 1, inactiveLabel: false) {
+        valueTile("units", "device.units", width: 2, height: 1, inactiveLabel: false) {
  			state "default", label:'Units: ${currentValue}'            
  		}
 		valueTile("battery", "device.battery", inactiveLabel: false, width: 2, height: 2) {
@@ -70,11 +76,15 @@ metadata {
 		valueTile("WindStrength", "device.WindStrength") {
  			state "WindStrength",label:'${currentValue}', icon:"st.Weather.weather1", backgroundColor:"#00a0dc"
  		}        
- 		valueTile("lastupdate", "lastupdate", width: 4, height: 1, inactiveLabel: false) { 			state "default", label:"Last updated: " + '${currentValue}' 		}        
-        
+ 		valueTile("lastupdate", "lastupdate", width: 4, height: 1, inactiveLabel: false) {
+            state "default", label:"Last updated: " + '${currentValue}'
+            }        
+        valueTile("refresh", "device.refresh", width: 2, height: 1, inactiveLabel: false) {
+ 			state "default", label:'Refresh', action:"refresh", icon:"st.secondary.refresh-icon"           
+ 		}        
         
         main (["main"])
- 		details(["main", "GustStrength", "GustAngle", "max_wind_str", "units", "lastupdate","battery"  ])
+ 		details(["main", "GustStrength", "GustAngle", "max_wind_str", "lastupdate","battery","units","refresh" ])
 	}
 }
 
@@ -84,5 +94,8 @@ def parse(String description) {
 }
 
 def poll() {
+	parent.poll()
+}
+def refresh() {
 	parent.poll()
 }

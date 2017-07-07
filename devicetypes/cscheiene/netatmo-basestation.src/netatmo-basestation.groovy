@@ -29,11 +29,16 @@ metadata {
         attribute "max_temp", "number"
         attribute "temp_trend", "string"
         attribute "pressure_trend", "string"
+        attribute "lastupdate", "string"
 	}
 
 	simulator {
 		// TODO: define status and reply messages here
 	}
+    preferences {
+        input title: "Settings", description: "To change units, go to the Netatmo Connect App", displayDuringSetup: false, type: "paragraph", element: "paragraph"
+        input title: "Information", description: "Your Netatmo station updates the Netatmo servers approximately every 10 minutes. The Netatmo Connect app polls these servers every 5 minutes. If the time of last update is equal to or less than 10 minutes, pressing the refresh button will have no effect", displayDuringSetup: false, type: "paragraph", element: "paragraph"
+    }      
 
 	tiles (scale: 2) {
 		multiAttributeTile(name:"main", type:"generic", width:6, height:4) {
@@ -64,10 +69,10 @@ metadata {
  				]
  				)
  		}
-        valueTile("min_temp", "min_temp", width: 2, height: 1) {
+        valueTile("min_temp", "min_temp", width: 3, height: 1) {
  			state "min_temp", label: 'Min: ${currentValue}°'
  		}
-        valueTile("max_temp", "max_temp", width: 2, height: 1) {
+        valueTile("max_temp", "max_temp", width: 3, height: 1) {
  			state "max_temp", label: 'Max: ${currentValue}°'
  		}        
  		valueTile("humidity", "device.humidity", inactiveLabel: false) {
@@ -86,7 +91,7 @@ metadata {
                 [value: 1000, color: "#e86d13"]
  				]
  		}
- 		valueTile("soundPressureLevel", "device.soundPressureLevel", width: 2, height: 2, inactiveLabel: false) {
+ 		valueTile("soundPressureLevel", "device.soundPressureLevel", width: 2, height: 1, inactiveLabel: false) {
  			state "soundPressureLevel", label:'${currentValue}db'
  		}
  		valueTile("pressure", "device.pressure", width: 2, height: 1, inactiveLabel: false) {
@@ -96,11 +101,20 @@ metadata {
  			state "default", label:'${currentValue}'            
  		}
         valueTile("lastupdate", "lastupdate", width: 4, height: 1, inactiveLabel: false) { 			
-        state "default", label:"Last updated: " + '${currentValue}' 		
-        }  		
+            state "default", label:"Last updated: " + '${currentValue}' 		
+        }
+ 		valueTile("date_min_temp", "date_min_temp", width: 3, height: 1, inactiveLabel: false) { 			
+          state "default", label:'${currentValue}' 		
+          }
+        valueTile("date_max_temp", "date_max_temp", width: 3, height: 1, inactiveLabel: false) { 			
+          state "default", label:'${currentValue}' 		
+          }        
+        valueTile("refresh", "device.refresh", width: 2, height: 1, inactiveLabel: false) {
+ 			state "default", label:'Refresh', action:"refresh", icon:"st.secondary.refresh-icon"           
+ 		}
         
         main(["main"]) // IOS users! If you want color with the temperature in the "Things" overview, replace "main" with "temperature"
- 		details(["main", "min_temp", "max_temp", "carbonDioxide", "temp_trend", "pressure", "units", "pressure_trend", "soundPressureLevel", "lastupdate"])
+ 		details(["main","min_temp","date_min_temp", "max_temp","date_max_temp", "temp_trend","carbonDioxide", "pressure", "units", "pressure_trend", "soundPressureLevel", "lastupdate", "refresh"])
 	}
 }
 
@@ -112,5 +126,8 @@ def parse(String description) {
 }
 
 def poll() {
+	parent.poll()
+}
+def refresh() {
 	parent.poll()
 }

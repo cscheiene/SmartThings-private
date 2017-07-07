@@ -27,12 +27,18 @@ metadata {
         attribute "min_temp", "number"
         attribute "max_temp", "number"   
         attribute "temp_trend", "string"
+        attribute "lastupdate", "string"
 	}
 
 	simulator {
 		// TODO: define status and reply messages here
 	}
 
+    preferences {
+        input title: "Settings", description: "To change units, go to the Netatmo Connect App", displayDuringSetup: false, type: "paragraph", element: "paragraph"
+        input title: "Information", description: "Your Netatmo station updates the Netatmo servers approximately every 10 minutes. The Netatmo Connect app polls these servers every 5 minutes. If the time of last update is equal to or less than 10 minutes, pressing the refresh button will have no effect", displayDuringSetup: false, type: "paragraph", element: "paragraph"
+    }  
+    
 	tiles (scale: 2) {
 		multiAttributeTile(name:"main", type:"generic", width:6, height:4) {
 			tileAttribute("temperature", key: "PRIMARY_CONTROL") {
@@ -50,10 +56,10 @@ metadata {
 				attributeState "humidity", label:'Humidity: ${currentValue}%'
 			}
 		} 
-        valueTile("min_temp", "min_temp", width: 2, height: 1) {
+        valueTile("min_temp", "min_temp", width: 3, height: 1) {
  			state "min_temp", label: 'Min: ${currentValue}°'
  		}
-        valueTile("max_temp", "max_temp", width: 2, height: 1) {
+        valueTile("max_temp", "max_temp", width: 3, height: 1) {
  			state "max_temp", label: 'Max: ${currentValue}°'
  		}
         valueTile("temp_trend", "temp_trend", width: 4, height: 1) {
@@ -85,9 +91,17 @@ metadata {
  		valueTile("lastupdate", "lastupdate", width: 4, height: 1, inactiveLabel: false) { 			
           state "default", label:"Last updated: " + '${currentValue}' 		
           }
-                
+ 		valueTile("date_min_temp", "date_min_temp", width: 3, height: 1, inactiveLabel: false) { 			
+          state "default", label:'${currentValue}' 		
+          }
+        valueTile("date_max_temp", "date_max_temp", width: 3, height: 1, inactiveLabel: false) { 			
+          state "default", label:'${currentValue}' 		
+          }   
+        valueTile("refresh", "device.refresh", width: 3, height: 1, inactiveLabel: false) {
+ 			state "default", label:'Refresh', action:"refresh", icon:"st.secondary.refresh-icon"           
+ 		}                
         main (["main"]) // IOS users! If you want color with the temperature in the "Things" overview, replace "main" with "temperature"
- 		details(["main", "min_temp", "max_temp", "temp_trend", "battery", "lastupdate"])
+ 		details(["main", "min_temp","date_min_temp", "max_temp","date_max_temp", "temp_trend", "battery", "lastupdate","refresh"])
 	}
 }
 
@@ -99,5 +113,8 @@ def parse(String description) {
 }
 
 def poll() {
+	parent.poll()
+}
+def refresh() {
 	parent.poll()
 }
