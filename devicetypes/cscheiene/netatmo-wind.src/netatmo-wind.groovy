@@ -1,5 +1,5 @@
 /**
- *  netatmo-windmodule Date: 06.07.2017
+ *  netatmo-windmodule Date: 08.07.2017
  *
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
@@ -20,6 +20,7 @@ metadata {
 	definition (name: "Netatmo Wind", namespace: "cscheiene", author: "Brian Steere, cscheiene") {
 	    capability "Sensor"
         capability "Battery"
+        capability "Refresh"
         
         attribute "WindStrength", "number"
         attribute "WindAngle", "number"
@@ -79,8 +80,8 @@ metadata {
  		valueTile("lastupdate", "lastupdate", width: 4, height: 1, inactiveLabel: false) {
             state "default", label:"Last updated: " + '${currentValue}'
             }        
-        valueTile("refresh", "device.refresh", width: 2, height: 1, inactiveLabel: false) {
- 			state "default", label:'Refresh', action:"refresh", icon:"st.secondary.refresh-icon"           
+        standardTile("refresh", "device.refresh", width: 2, height: 1, inactiveLabel: false, decoration: "flat") {
+ 			state "default", action:"refresh.refresh", icon:"st.secondary.refresh"
  		}        
         
         main (["main"])
@@ -94,8 +95,11 @@ def parse(String description) {
 }
 
 def poll() {
-	parent.poll()
+	log.debug "Polling"
+    parent.poll()
 }
+
 def refresh() {
+    log.debug "Refreshing"
 	parent.poll()
 }

@@ -1,5 +1,5 @@
 /**
- *  netatmo-rain module Date: 06.07.2017
+ *  netatmo-rain module Date: 08.07.2017
  *
  *  Copyright 2014 Brian Steere
  *
@@ -19,6 +19,7 @@ metadata {
 	definition (name: "Netatmo Rain", namespace: "cscheiene", author: "Brian Steere,cscheiene") {
 	    capability "Sensor"
         capability "Battery"
+        capability "Refresh"
         
         attribute "rain", "number"
         attribute "rainSumHour", "number"
@@ -71,11 +72,11 @@ metadata {
         valueTile("lastupdate", "lastupdate", width: 4, height: 1, inactiveLabel: false) {
             state "default", label:"Last updated: " + '${currentValue}'
         }        
-        valueTile("refresh", "device.refresh", width: 2, height: 1, inactiveLabel: false) {
- 			state "default", label:'Refresh', action:"refresh", icon:"st.secondary.refresh-icon"           
+        standardTile("refresh", "device.refresh", width: 2, height: 1, inactiveLabel: false, decoration: "flat") {
+ 			state "default", action:"refresh.refresh", icon:"st.secondary.refresh"
  		}        
         main (["main"])
- 		details(["main", "rainSumDay", "battery", "units", "lastupdate" ,"refresh"])
+ 		details(["main", "rainSumDay", "units", "battery", "lastupdate" ,"refresh"])
 	}
 }
 
@@ -85,8 +86,11 @@ def parse(String description) {
 }
 
 def poll() {
-	parent.poll()
+	log.debug "Polling"
+    parent.poll()
 }
+
 def refresh() {
+    log.debug "Refreshing"
 	parent.poll()
 }

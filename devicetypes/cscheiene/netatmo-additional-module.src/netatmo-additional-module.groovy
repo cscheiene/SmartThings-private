@@ -1,5 +1,5 @@
 /**
- *  netatmo additional module  Date: 16.05.2017
+ *  netatmo additional module  Date: 08.07.2017
  *
  *  Copyright 2014 Brian Steere
  *
@@ -21,7 +21,8 @@ metadata {
         capability "Battery"
 		capability "Relative Humidity Measurement"
 		capability "Temperature Measurement"
-        capability "Carbon Dioxide Measurement" 
+        capability "Carbon Dioxide Measurement"
+        capability "Refresh"
         
         attribute "min_temp", "number"
         attribute "max_temp", "number"
@@ -104,8 +105,8 @@ metadata {
         valueTile("date_max_temp", "date_max_temp", width: 3, height: 1, inactiveLabel: false) { 			
           state "default", label:'${currentValue}' 		
           }            
-        valueTile("refresh", "device.refresh", width: 4, height: 2, inactiveLabel: false) {
- 			state "default", label:'Refresh', action:"refresh", icon:"st.secondary.refresh-icon"           
+ 		standardTile("refresh", "device.refresh", width: 4, height: 2, inactiveLabel: false, decoration: "flat") {
+ 			state "default", action:"refresh.refresh", icon:"st.secondary.refresh"
  		}              
                
         main "main" // IOS users! If you want color with the temperature in the "Things" overview, replace "main" with "temperature"
@@ -120,8 +121,11 @@ def parse(String description) {
 }
 
 def poll() {
-	parent.poll()
+	log.debug "Polling"
+    parent.poll()
 }
+
 def refresh() {
+    log.debug "Refreshing"
 	parent.poll()
 }

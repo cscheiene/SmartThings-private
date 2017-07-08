@@ -1,5 +1,5 @@
 /**
- *  netatmo-outdoor Date: 07.07.2017
+ *  netatmo-outdoor Date: 08.07.2017
  *
  *  Copyright 2014 Brian Steere
  *
@@ -23,6 +23,7 @@ metadata {
 		capability "Temperature Measurement"
         capability "Sensor"
         capability "Battery"
+        capability "Refresh"
         
         attribute "min_temp", "number"
         attribute "max_temp", "number"   
@@ -97,8 +98,8 @@ metadata {
         valueTile("date_max_temp", "date_max_temp", width: 3, height: 1, inactiveLabel: false) { 			
           state "default", label:'${currentValue}' 		
           }   
-        valueTile("refresh", "device.refresh", width: 3, height: 1, inactiveLabel: false) {
- 			state "default", label:'Refresh', action:"refresh", icon:"st.secondary.refresh-icon"           
+        standardTile("refresh", "device.refresh", width: 3, height: 1, inactiveLabel: false, decoration: "flat") {
+ 			state "default", action:"refresh.refresh", icon:"st.secondary.refresh"
  		}                
         main (["main"]) // IOS users! If you want color with the temperature in the "Things" overview, replace "main" with "temperature"
  		details(["main", "min_temp","date_min_temp", "max_temp","date_max_temp", "temp_trend", "battery", "lastupdate","refresh"])
@@ -113,8 +114,11 @@ def parse(String description) {
 }
 
 def poll() {
-	parent.poll()
+	log.debug "Polling"
+    parent.poll()
 }
+
 def refresh() {
+    log.debug "Refreshing"
 	parent.poll()
 }
