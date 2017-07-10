@@ -1,5 +1,5 @@
 /**
- *  netatmo-rain module Date: 08.07.2017
+ *  netatmo-rain module Date: 10.07.2017
  *
  *  Copyright 2014 Brian Steere
  *
@@ -35,7 +35,7 @@ metadata {
 	}
     
     preferences {
-        input title: "Settings", description: "To change units, go to the Netatmo Connect App", displayDuringSetup: false, type: "paragraph", element: "paragraph"
+        input title: "Settings", description: "To change units and time format, go to the Netatmo Connect App", displayDuringSetup: false, type: "paragraph", element: "paragraph"
         input title: "Information", description: "Your Netatmo station updates the Netatmo servers approximately every 10 minutes. The Netatmo Connect app polls these servers every 5 minutes. If the time of last update is equal to or less than 10 minutes, pressing the refresh button will have no effect", displayDuringSetup: false, type: "paragraph", element: "paragraph"
     }
     
@@ -48,10 +48,10 @@ metadata {
 				attributeState "rainSumHour", label:'Last Hour: ${currentValue}'
 			}
 		} 
- 		valueTile("rainSumDay", "device.rainSumDay", width: 2, height: 2, inactiveLabel: false) {
+ 		valueTile("rainSumDay", "device.rainSumDay", width: 2, height: 1, inactiveLabel: false) {
  			state "default", label:'Total: ${currentValue}'
  		}
-        valueTile("units", "units", width: 2, height: 2, inactiveLabel: false) {
+        valueTile("units", "units", width: 2, height: 1, inactiveLabel: false) {
  			state "default", label:'Units: ${currentValue}'            
  		}
 		valueTile("battery", "device.battery", inactiveLabel: false, width: 2, height: 2) {
@@ -72,7 +72,7 @@ metadata {
         valueTile("lastupdate", "lastupdate", width: 4, height: 1, inactiveLabel: false) {
             state "default", label:"Last updated: " + '${currentValue}'
         }        
-        standardTile("refresh", "device.refresh", width: 2, height: 1, inactiveLabel: false, decoration: "flat") {
+        standardTile("refresh", "device.refresh", width: 2, height: 2, inactiveLabel: false, decoration: "flat") {
  			state "default", action:"refresh.refresh", icon:"st.secondary.refresh"
  		}        
         main (["main"])
