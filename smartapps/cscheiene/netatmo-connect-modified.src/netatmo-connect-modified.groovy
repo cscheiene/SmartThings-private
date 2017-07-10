@@ -1,5 +1,5 @@
 /**
- * Netatmo Connect Date: 06.07.2017
+ * Netatmo Connect Date: 10.07.2017
  */
 
 import java.text.DecimalFormat
@@ -343,23 +343,23 @@ def initialize() {
 		try {
 			switch(detail?.type) {
 				case 'NAMain':
-					log.debug "Base station"
+					log.debug "Creating Base station"
 					createChildDevice("Netatmo Basestation", deviceId, "${detail.type}.${deviceId}", detail.module_name)
 					break
 				case 'NAModule1':
-					log.debug "Outdoor module"
+					log.debug "Creating Outdoor module"
 					createChildDevice("Netatmo Outdoor Module", deviceId, "${detail.type}.${deviceId}", detail.module_name)
 					break
 				case 'NAModule3':
-					log.debug "Rain Gauge"
+					log.debug "Creating Rain Gauge"
 					createChildDevice("Netatmo Rain", deviceId, "${detail.type}.${deviceId}", detail.module_name)
 					break
 				case 'NAModule4':
-					log.debug "Additional module"
+					log.debug "Creating Additional module"
 					createChildDevice("Netatmo Additional Module", deviceId, "${detail.type}.${deviceId}", detail.module_name)
 					break
                 case 'NAModule2':
-					log.debug "Wind module"
+					log.debug "Creating Wind module"
 					createChildDevice("Netatmo Wind", deviceId, "${detail.type}.${deviceId}", detail.module_name)
 					break
 			}
@@ -479,6 +479,7 @@ def listDevices() {
         	input "rainUnits", "enum", title: "Rain Units", description: "Please select rain units", required: true, options: [mm:'Millimeters', in:'Inches']
             input "pressUnits", "enum", title: "Pressure Units", description: "Please select pressure units", required: true, options: [mbar:'mbar', inhg:'inhg']            
             input "windUnits", "enum", title: "Wind Units", description: "Please select wind units", required: true, options: [kph:'kph', ms:'ms', mph:'mph', kts:'kts']
+            input "time", "enum", title: "Time Format", description: "Please select time format", required: true, options: [12:'12 Hour', 24:'24 Hour']
         }
 	}
 }
@@ -589,7 +590,8 @@ def poll() {
                 child?.sendEvent(name: 'max_wind_str', value: (windToPref(data['max_wind_str'])).toDouble().trunc(1), unit: settings.windUnits)
                 child?.sendEvent(name: 'units', value: settings.windUnits)
                 child?.sendEvent(name: 'lastupdate', value: lastUpdated(data['time_utc']), unit: "")
- 				break;
+                child?.sendEvent(name: 'date_max_wind_str', value: lastUpdated(data['date_max_wind_str']), unit: "")
+                break;
 		}
 	}
 }
@@ -630,9 +632,16 @@ def windToPref(Wind) {
     }
 }
 def lastUpdated(time) {
+    if(settings.time == '24') {
+    def updtTime = new Date(time*1000L).format("HH:mm", location.timeZone)
+    state.lastUpdated = updtTime
+    return updtTime
+    } else {
     def updtTime = new Date(time*1000L).format("h:mm aa", location.timeZone)
     state.lastUpdated = updtTime
-    return updtTime }
+    return updtTime
+    }
+}
 
 def debugEvent(message, displayEvent) {
 
