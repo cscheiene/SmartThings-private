@@ -10,6 +10,11 @@
  *  on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License
  *  for the specific language governing permissions and limitations under the License.
  *
+ *  Based on Smartthings Fibaro Smoke Sensor DTH, removed unused stuff and added some minor things
+ *  Not in anyway responsible for any missed Smoke alarm notifications. Tested ok with real smoke on deivce, but use at your own risk
+ *
+ *
+ *
  */
  
 metadata {
