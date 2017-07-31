@@ -11,36 +11,15 @@
  *  for the specific language governing permissions and limitations under the License.
  *
  */
+ 
 metadata {
     definition (name: "Dlink z310 Smoke", namespace: "cscheiene", author: "SmartThings,cscheiene") {
         capability "Battery" //attributes: battery
-        capability "Configuration"  //commands: configure()
         capability "Sensor"
         capability "Smoke Detector" //attributes: smoke ("detected","clear","tested")
         capability "Health Check"
         attribute "tamper", "enum", ["detected", "clear"]
-        attribute "heatAlarm", "enum", ["overheat detected", "clear", "rapid temperature rise", "underheat detected"]
         fingerprint mfr:"0108", prod:"0002", model:"001E"
-    }
-    simulator {
-        //battery
-        for (int i in [0, 5, 10, 15, 50, 99, 100]) {
-            status "battery ${i}%":  new physicalgraph.zwave.Zwave().securityV1.securityMessageEncapsulation().encapsulate(
-                    new physicalgraph.zwave.Zwave().batteryV1.batteryReport(batteryLevel: i)
-            ).incomingMessage()
-        }
-        status "battery 100%": "command: 8003, payload: 64"
-        status "battery 5%": "command: 8003, payload: 05"
-        //smoke
-        status "smoke detected": "command: 7105, payload: 01 01"
-        status "smoke clear": "command: 7105, payload: 01 00"
-        status "smoke tested": "command: 7105, payload: 01 03"
-        //temperature
-        for (int i = 0; i <= 100; i += 20) {
-            status "temperature ${i}F": new physicalgraph.zwave.Zwave().securityV1.securityMessageEncapsulation().encapsulate(
-                    new physicalgraph.zwave.Zwave().sensorMultilevelV5.sensorMultilevelReport(scaledSensorValue: i, precision: 1, sensorType: 1, scale: 1)
-            ).incomingMessage()
-        }
     }
 
     tiles (scale: 2){
@@ -59,19 +38,6 @@ metadata {
         valueTile("battery", "device.battery", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
             state "battery", label:'${currentValue}% battery', unit:"%"
         }
-/*        valueTile("temperature", "device.temperature", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
-            state "temperature", label:'${currentValue}°', unit:"C"
-        }
-        valueTile("heatAlarm", "device.heatAlarm", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
-            state "clear", label:'TEMPERATURE OK', backgroundColor:"#ffffff"
-            state "overheat detected", label:'OVERHEAT DETECTED', backgroundColor:"#ffffff"
-            state "rapid temperature rise", label:'RAPID TEMP RISE', backgroundColor:"#ffffff"
-            state "underheat detected", label:'UNDERHEAT DETECTED', backgroundColor:"#ffffff"
-        }
-        valueTile("tamper", "device.tamper", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
-            state "clear", label:'NO TAMPER', backgroundColor:"#ffffff"
-            state "detected", label:'TAMPER DETECTED', backgroundColor:"#ffffff"
-        }*/
 
         main "smoke"
         details(["smoke","battery"])
@@ -79,13 +45,11 @@ metadata {
 }
 
 def installed() {
-// Device checks in every hour, this interval allows us to miss one check-in notification before marking offline
-	sendEvent(name: "checkInterval", value: 3 * 60 * 60 + 2 * 60, displayed: false, data: [protocol: "zwave", hubHardwareId: device.hub.hardwareID])
+	sendEvent(name: "checkInterval", value: 4 * 60 * 60 + 2 * 60, displayed: false, data: [protocol: "zwave", hubHardwareId: device.hub.hardwareID])
 }
 
 def updated() {
-// Device checks in every hour, this interval allows us to miss one check-in notification before marking offline
-	sendEvent(name: "checkInterval", value: 3 * 60 * 60 + 2 * 60, displayed: false, data: [protocol: "zwave", hubHardwareId: device.hub.hardwareID])
+	sendEvent(name: "checkInterval", value: 4 * 60 * 60 + 2 * 60, displayed: false, data: [protocol: "zwave", hubHardwareId: device.hub.hardwareID])
 }
 
 
@@ -126,22 +90,10 @@ def zwaveEvent(physicalgraph.zwave.commands.batteryv1.BatteryReport cmd) {
     } else {
         map.value = cmd.batteryLevel
     }
-    setConfigured("true")  //when battery is reported back meaning configuration is done
-    //Store time of last battery update so we don't ask every wakeup, see WakeUpNotification handler
     state.lastbatt = now()
     createEvent(map)
 }
 
-def zwaveEvent(physicalgraph.zwave.commands.applicationstatusv1.ApplicationBusy cmd) {
-    def msg = cmd.status == 0 ? "try again later" :
-            cmd.status == 1 ? "try again in $cmd.waitTime seconds" :
-                    cmd.status == 2 ? "request queued" : "sorry"
-    createEvent(displayed: true, descriptionText: "$device.displayName is busy, $msg")
-}
-
-def zwaveEvent(physicalgraph.zwave.commands.applicationstatusv1.ApplicationRejectedRequest cmd) {
-    createEvent(displayed: true, descriptionText: "$device.displayName rejected the last request")
-}
 
 def zwaveEvent(physicalgraph.zwave.commands.securityv1.SecurityMessageEncapsulation cmd) {
     setSecured()
@@ -181,7 +133,7 @@ def zwaveEvent(physicalgraph.zwave.commands.notificationv3.NotificationReport cm
     if (cmd.notificationType == 7) {
         switch (cmd.event) {
             case 0:
-                result << createEvent(name: "tamper", value: "clear", displayed: false)
+                result << createEvent(name: "tamper", value: "clear", displayed: true)
                 break
             case 3:
                 result << createEvent(name: "tamper", value: "detected", displayed: true, isStateChange: true, descriptionText: "$device.displayName casing was opened")
@@ -221,33 +173,10 @@ def smokeAlarmEvent(value) {
     }
     createEvent(map)
 }
-/*
-def heatAlarmEvent(value) {
-    log.debug "heatAlarmEvent(value): $value"
-    def map = [name: "heatAlarm"]
-    if (value == 1 || value == 2) {
-        map.value = "overheat detected"
-        map.descriptionText = "$device.displayName overheat detected"
-    } else if (value == 0) {
-        map.value = "clear"
-        map.descriptionText = "$device.displayName heat alarm cleared (no overheat)"
-    } else if (value == 3 || value == 4) {
-        map.value = "rapid temperature rise"
-        map.descriptionText = "$device.displayName rapid temperature rise"
-    } else if (value == 5 || value == 6) {
-        map.value = "underheat detected"
-        map.descriptionText = "$device.displayName underheat detected"
-    } else {
-        map.value = "unknown"
-        map.descriptionText = "$device.displayName unknown event"
-    }
-    createEvent(map)
-}
-*/
+
 def zwaveEvent(physicalgraph.zwave.commands.wakeupv1.WakeUpNotification cmd) {
     log.info "Executing zwaveEvent 84 (WakeUpV1): 07 (WakeUpNotification) with cmd: $cmd"
-    log.info "checking this MSR : ${getDataValue("MSR")} before sending configuration to device"
-    def result = [createEvent(descriptionText: "${device.displayName} woke up", isStateChange: true, displayed: true)]
+    def result = [createEvent(descriptionText: "${device.displayName} woke up", displayed: true, isStateChange: true)]
     def cmds = []
     /* check MSR = "manufacturerId-productTypeId" to make sure configuration commands are sent to the right model */
     if (!isConfigured() && getDataValue("MSR")?.startsWith("010F-0C02")) {
@@ -265,23 +194,7 @@ def zwaveEvent(physicalgraph.zwave.commands.wakeupv1.WakeUpNotification cmd) {
     }
     result
 }
-/*
-def zwaveEvent(physicalgraph.zwave.commands.sensormultilevelv5.SensorMultilevelReport cmd) {
-    log.info "Executing zwaveEvent 31 (SensorMultilevelV5): 05 (SensorMultilevelReport) with cmd: $cmd"
-    def map = [:]
-    switch (cmd.sensorType) {
-        case 1:
-            map.name = "temperature"
-            def cmdScale = cmd.scale == 1 ? "F" : "C"
-            map.value = convertTemperatureIfNeeded(cmd.scaledSensorValue, cmdScale, cmd.precision)
-            map.unit = getTemperatureScale()
-            break
-        default:
-            map.descriptionText = cmd.toString()
-    }
-    createEvent(map)
-}
-*/
+
 def zwaveEvent(physicalgraph.zwave.commands.deviceresetlocallyv1.DeviceResetLocallyNotification cmd) {
     log.info "Executing zwaveEvent 5A (DeviceResetLocallyV1) : 01 (DeviceResetLocallyNotification) with cmd: $cmd"
     createEvent(descriptionText: cmd.toString(), isStateChange: true, displayed: true)
@@ -318,96 +231,7 @@ def zwaveEvent(physicalgraph.zwave.Command cmd) {
     log.warn "General zwaveEvent cmd: ${cmd}"
     createEvent(descriptionText: cmd.toString(), isStateChange: false)
 }
-/*
-def configure() {
-// This sensor joins as a secure device if you tripple-click the button to include it
-    log.debug "configure() >> isSecured() : ${isSecured()}"
-    if (!isSecured()) {
-        log.debug "Fibaro smoke sensor not sending configure until secure"
-        return []
-    } else {
-        log.info "${device.displayName} is configuring its settings"
-        def request = []
 
-        //1. configure wakeup interval : available: 0, 4200s-65535s, device default 21600s(6hr)
-        request += zwave.wakeUpV1.wakeUpIntervalSet(seconds:6*3600, nodeid:zwaveHubNodeId)
-
-        //2. Smoke Sensitivity 3 levels: 1-HIGH , 2-MEDIUM (default), 3-LOW
-        if (smokeSensorSensitivity && smokeSensorSensitivity != "null") {
-            request += zwave.configurationV1.configurationSet(parameterNumber: 1, size: 1,
-                    scaledConfigurationValue:
-                            smokeSensorSensitivity == "High" ? 1 :
-                                    smokeSensorSensitivity == "Medium" ? 2 :
-                                            smokeSensorSensitivity == "Low" ? 3 : 2)
-        }
-        //3. Z-Wave notification status: 0-all disabled (default), 1-casing open enabled, 2-exceeding temp enable
-        if (zwaveNotificationStatus && zwaveNotificationStatus != "null"){
-            request += zwave.configurationV1.configurationSet(parameterNumber: 2, size: 1, scaledConfigurationValue: notificationOptionValueMap[zwaveNotificationStatus] ?: 0)
-        }
-        //4. Visual indicator notification status: 0-all disabled (default), 1-casing open enabled, 2-exceeding temp enable, 4-lack of range notification
-        if (visualIndicatorNotificationStatus && visualIndicatorNotificationStatus != "null") {
-            request += zwave.configurationV1.configurationSet(parameterNumber: 3, size: 1, scaledConfigurationValue: notificationOptionValueMap[visualIndicatorNotificationStatus] ?: 0)
-        }
-        //5. Sound notification status: 0-all disabled (default), 1-casing open enabled, 2-exceeding temp enable, 4-lack of range notification
-        if (soundNotificationStatus && soundNotificationStatus != "null") {
-            request += zwave.configurationV1.configurationSet(parameterNumber: 4, size: 1, scaledConfigurationValue: notificationOptionValueMap[soundNotificationStatus] ?: 0)
-        }
-        //6. Temperature report interval: 0-report inactive, 1-8640 (multiply by 10 secs) [10s-24hr], default 180 (30 minutes)
-        if (temperatureReportInterval && temperatureReportInterval != "null") {
-            request += zwave.configurationV1.configurationSet(parameterNumber: 20, size: 2, scaledConfigurationValue: timeOptionValueMap[temperatureReportInterval] ?: 180)
-        } else { //send SmartThings default configuration
-            request += zwave.configurationV1.configurationSet(parameterNumber: 20, size: 2, scaledConfigurationValue: 180)
-        }
-        //7. Temperature report hysteresis: 1-100 (in 0.1C step) [0.1C - 10C], default 10 (1 C)
-        if (temperatureReportHysteresis && temperatureReportHysteresis != null) {
-            request += zwave.configurationV1.configurationSet(parameterNumber: 21, size: 1, scaledConfigurationValue: temperatureReportHysteresis < 1 ? 1 : temperatureReportHysteresis > 100 ? 100 : temperatureReportHysteresis)
-        }
-        //8. Temperature threshold: 1-100 (C), default 55 (C)
-        if (temperatureThreshold && temperatureThreshold != null) {
-            request += zwave.configurationV1.configurationSet(parameterNumber: 30, size: 1, scaledConfigurationValue: temperatureThreshold < 1 ? 1 : temperatureThreshold > 100 ? 100 : temperatureThreshold)
-        }
-        //9. Excess temperature signaling interval: 1-8640 (multiply by 10 secs) [10s-24hr], default 180 (30 minutes)
-        if (excessTemperatureSignalingInterval && excessTemperatureSignalingInterval != "null") {
-            request += zwave.configurationV1.configurationSet(parameterNumber: 31, size: 2, scaledConfigurationValue: timeOptionValueMap[excessTemperatureSignalingInterval] ?: 180)
-        } else { //send SmartThings default configuration
-            request += zwave.configurationV1.configurationSet(parameterNumber: 31, size: 2, scaledConfigurationValue: 180)
-        }
-        //10. Lack of Z-Wave range indication interval: 1-8640 (multiply by 10 secs) [10s-24hr], default 2160 (6 hours)
-        if (lackOfZwaveRangeIndicationInterval && lackOfZwaveRangeIndicationInterval != "null") {
-            request += zwave.configurationV1.configurationSet(parameterNumber: 32, size: 2, scaledConfigurationValue: timeOptionValueMap[lackOfZwaveRangeIndicationInterval] ?: 2160)
-        } else {
-            request += zwave.configurationV1.configurationSet(parameterNumber: 32, size: 2, scaledConfigurationValue: 2160)
-        }
-        //11. get battery level when device is paired
-        request += zwave.batteryV1.batteryGet()
-
-        //12. get temperature reading from device
-        request += zwave.sensorMultilevelV5.sensorMultilevelGet(sensorType: 0x01)
-
-        commands(request) + ["delay 10000", zwave.wakeUpV1.wakeUpNoMoreInformation().format()]
-    }
-}
-
-private def getTimeOptionValueMap() { [
-        "5 minutes"  : 30,
-        "15 minutes" : 90,
-        "30 minutes" : 180,
-        "1 hour"     : 360,
-        "6 hours"    : 2160,
-        "12 hours"   : 4320,
-        "18 hours"   : 6480,
-        "24 hours"   : 8640,
-        "reports inactive" : 0,
-]}
-
-private def getNotificationOptionValueMap() { [
-        "disabled" : 0,
-        "casing opened" : 1,
-        "exceeding temperature threshold" : 2,
-        "lack of Z-Wave range" : 4,
-        "all notifications" : 7,
-]}
-*/
 private command(physicalgraph.zwave.Command cmd) {
     if (isSecured()) {
         log.info "Sending secured command: ${cmd}"
@@ -422,7 +246,6 @@ private commands(commands, delay=200) {
     log.info "inside commands: ${commands}"
     delayBetween(commands.collect{ command(it) }, delay)
 }
-
 private setConfigured(configure) {
     updateDataValue("configured", configure)
 }
