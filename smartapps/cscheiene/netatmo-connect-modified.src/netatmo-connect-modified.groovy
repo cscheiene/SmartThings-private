@@ -1,5 +1,5 @@
 /**
- * Netatmo Connect Date: 10.07.2017
+ * Netatmo Connect Date: 01.08.2017
  */
 
 import java.text.DecimalFormat
@@ -582,8 +582,8 @@ def poll() {
 				break;
             case 'NAModule2':
 				log.debug "Updating NAModule2 $data"
-				child?.sendEvent(name: 'WindAngle', value: data['WindAngle'], unit: "°")
-                child?.sendEvent(name: 'GustAngle', value: data['GustAngle'], unit: "°")
+				child?.sendEvent(name: 'WindAngle', value: data['WindAngle'], unit: "°", displayed: false)
+                child?.sendEvent(name: 'GustAngle', value: data['GustAngle'], unit: "°", displayed: false)
                 child?.sendEvent(name: 'battery', value: detail['battery_percent'], unit: "%")
 				child?.sendEvent(name: 'WindStrength', value: (windToPref(data['WindStrength'])).toDouble().trunc(1), unit: settings.windUnits)
                 child?.sendEvent(name: 'GustStrength', value: (windToPref(data['GustStrength'])).toDouble().trunc(1), unit: settings.windUnits)
@@ -591,6 +591,8 @@ def poll() {
                 child?.sendEvent(name: 'units', value: settings.windUnits)
                 child?.sendEvent(name: 'lastupdate', value: lastUpdated(data['time_utc']), unit: "")
                 child?.sendEvent(name: 'date_max_wind_str', value: lastUpdated(data['date_max_wind_str']), unit: "")
+                child?.sendEvent(name: 'WindDirection', value: windTotext(data['WindAngle']))
+                child?.sendEvent(name: 'GustDirection', value: gustTotext(data['GustAngle']))
                 break;
 		}
 	}
@@ -640,6 +642,50 @@ def lastUpdated(time) {
     def updtTime = new Date(time*1000L).format("h:mm aa", location.timeZone)
     state.lastUpdated = updtTime
     return updtTime
+    }
+}
+
+def windTotext(WindAngle) {
+	if(WindAngle < 23) { 
+    	return WindAngle + "° North"
+    } else if (WindAngle < 68) {
+    	return WindAngle + "° NorthEast"
+    } else if (WindAngle < 113) {
+    	return WindAngle + "° East"
+    } else if (WindAngle < 158) {
+    	return WindAngle + "° SouthEast"
+    } else if (WindAngle < 203) {
+    	return WindAngle + "° South"
+    } else if (WindAngle < 248) {
+    	return WindAngle + "° SouthWest"
+    } else if (WindAngle < 293) {
+    	return WindAngle + "° West"
+    } else if (WindAngle < 338) {
+    	return WindAngle + "° NorthWest"
+    } else if (WindAngle < 361) {
+    	return WindAngle + "° North"
+    }
+}
+
+def gustTotext(GustAngle) {
+	if(WindAngle < 23) { 
+    	return GustAngle + "° North"
+    } else if (GustAngle < 68) {
+    	return GustAngle + "° NEast"
+    } else if (GustAngle < 113) {
+    	return GustAngle + "° East"
+    } else if (GustAngle < 158) {
+    	return GustAngle + "° SEast"
+    } else if (GustAngle < 203) {
+    	return GustAngle + "° South"
+    } else if (GustAngle < 248) {
+    	return GustAngle + "° SWest"
+    } else if (GustAngle < 293) {
+    	return GustAngle + "° West"
+    } else if (GustAngle < 338) {
+    	return GustAngle + "° NWest"
+    } else if (GustAngle < 361) {
+    	return GustAngle + "° North"
     }
 }
 
