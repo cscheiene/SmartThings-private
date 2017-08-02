@@ -1,5 +1,5 @@
 /**
- *  netatmo-windmodule Date: 10.07.2017
+ *  netatmo-windmodule Date: 01.08.2017
  *
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
@@ -48,15 +48,15 @@ metadata {
 			tileAttribute("WindStrength", key: "PRIMARY_CONTROL") {
             	attributeState "WindStrength", label:'${currentValue}', icon:"st.Weather.weather1", backgroundColor:"#00a0dc"
             }
-            tileAttribute ("WindAngle", key: "SECONDARY_CONTROL") {
-				attributeState "WindAngle", label:'Direction: ${currentValue}°'
+            tileAttribute ("WindDirection", key: "SECONDARY_CONTROL") {
+				attributeState "WindDirection", label:'Direction: ${currentValue}'
 			}
 		}        
  		valueTile("GustStrength", "device.GustStrength", width: 2, height: 1, inactiveLabel: false) {
  			state "default", label:'Gust: ${currentValue}'
  		}
-        valueTile("GustAngle", "device.GustAngle", width: 2, height: 1, inactiveLabel: false) {
- 			state "default", label:'${currentValue}°'            
+        valueTile("GustDirection", "device.GustDirection", width: 2, height: 1, inactiveLabel: false) {
+ 			state "default", label:'${currentValue}'            
  		}
         valueTile("max_wind_str", "device.max_wind_str", width: 2, height: 1, inactiveLabel: false) {
  			state "default", label:'Max: ${currentValue}'            
@@ -86,10 +86,13 @@ metadata {
             }
         standardTile("refresh", "device.refresh", width: 2, height: 2, inactiveLabel: false, decoration: "flat") {
  			state "default", action:"refresh.refresh", icon:"st.secondary.refresh"
+ 		}
+ 		valueTile("WindAngletext", "WindAngletext", width: 2, height: 1, inactiveLabel: false) {
+ 			state "default", label:'${currentValue}'
  		}        
         
         main (["main"])
- 		details(["main", "GustStrength", "GustAngle","battery", "max_wind_str","date_max_wind_str" ,"lastupdate","refresh", "units" ])
+ 		details(["main", "GustStrength", "GustDirection","battery", "max_wind_str","date_max_wind_str" ,"lastupdate","refresh", "units" ])
 	}
 }
 
