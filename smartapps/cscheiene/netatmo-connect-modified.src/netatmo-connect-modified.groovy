@@ -668,7 +668,7 @@ def windTotext(WindAngle) {
 }
 
 def gustTotext(GustAngle) {
-	if(WindAngle < 23) { 
+	if(GustAngle < 23) { 
     	return GustAngle + "° North"
     } else if (GustAngle < 68) {
     	return GustAngle + "° NEast"
