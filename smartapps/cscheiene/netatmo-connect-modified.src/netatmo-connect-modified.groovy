@@ -1,5 +1,5 @@
 /**
- * Netatmo Connect Date: 01.08.2017
+ * Netatmo Connect Date: 05.08.2017
  */
 
 import java.text.DecimalFormat
@@ -521,14 +521,14 @@ def poll() {
 	log.debug "Polling"
 	getDeviceList();
 	def children = getChildDevices()
-    log.debug "State: ${state.deviceState}"
+    //log.debug "State: ${state.deviceState}"
 
 	settings.devices.each { deviceId ->
 		def detail = state?.deviceDetail[deviceId]
 		def data = state?.deviceState[deviceId]
 		def child = children?.find { it.deviceNetworkId == deviceId }
 
-		log.debug "Update: $child";
+		//log.debug "Update: $child";
 		switch(detail?.type) {
 			case 'NAMain':
 				log.debug "Updating NAMain $data"
@@ -560,12 +560,15 @@ def poll() {
 				break;
 			case 'NAModule3':
 				log.debug "Updating NAModule3 $data"
-				child?.sendEvent(name: 'rain', value: (rainToPref(data['Rain'])).toDouble().trunc(1), unit: settings.rainUnits)
-				child?.sendEvent(name: 'rainSumHour', value: (rainToPref(data['sum_rain_1'])).toDouble().trunc(1), unit: settings.rainUnits)
-				child?.sendEvent(name: 'rainSumDay', value: (rainToPref(data['sum_rain_24'])).toDouble().trunc(1), unit: settings.rainUnits)
+				child?.sendEvent(name: 'rain', value: (rainToPref(data['Rain'])), unit: settings.rainUnits)
+				child?.sendEvent(name: 'rainSumHour', value: (rainToPref(data['sum_rain_1'])), unit: settings.rainUnits)
+				child?.sendEvent(name: 'rainSumDay', value: (rainToPref(data['sum_rain_24'])), unit: settings.rainUnits)
 				child?.sendEvent(name: 'units', value: settings.rainUnits)
                 child?.sendEvent(name: 'battery', value: detail['battery_percent'], unit: "%")
-                child?.sendEvent(name: 'lastupdate', value: lastUpdated(data['time_utc']), unit: "")              
+                child?.sendEvent(name: 'lastupdate', value: lastUpdated(data['time_utc']), unit: "")
+				child?.sendEvent(name: 'rainUnits', value: rainToPrefUnits(data['Rain']), displayed: false)
+				child?.sendEvent(name: 'rainSumHourUnits', value: rainToPrefUnits(data['sum_rain_1']), displayed: false)
+				child?.sendEvent(name: 'rainSumDayUnits', value: rainToPrefUnits(data['sum_rain_24']), displayed: false)                
 				break;
 			case 'NAModule4':
 				log.debug "Updating NAModule4 $data"
@@ -593,6 +596,9 @@ def poll() {
                 child?.sendEvent(name: 'date_max_wind_str', value: lastUpdated(data['date_max_wind_str']), unit: "")
                 child?.sendEvent(name: 'WindDirection', value: windTotext(data['WindAngle']))
                 child?.sendEvent(name: 'GustDirection', value: gustTotext(data['GustAngle']))
+				child?.sendEvent(name: 'WindStrengthUnits', value: windToPrefUnits(data['WindStrength']), displayed: false)
+                child?.sendEvent(name: 'GustStrengthUnits', value: windToPrefUnits(data['GustStrength']), displayed: false)
+                child?.sendEvent(name: 'max_wind_strUnits', value: windToPrefUnits(data['max_wind_str']), displayed: false)               
                 break;
 		}
 	}
@@ -608,9 +614,17 @@ def cToPref(temp) {
 
 def rainToPref(rain) {
 	if(settings.rainUnits == 'mm') {
-    	return rain
+    	return rain.toDouble().trunc(1)
     } else {
-    	return rain * 0.039370
+    	return (rain * 0.039370).toDouble().trunc(3)
+    }
+}
+
+def rainToPrefUnits(rain) {
+	if(settings.rainUnits == 'mm') {
+    	return rain.toDouble().trunc(1) + " mm"
+    } else {
+    	return (rain * 0.039370).toDouble().trunc(3) + " in"
     }
 }
 
@@ -631,6 +645,18 @@ def windToPref(Wind) {
     	return Wind * 0.621371192
     } else if (settings.windUnits == 'kts') {
     	return Wind * 0.539956803
+    }
+}
+
+def windToPrefUnits(Wind) {
+	if(settings.windUnits == 'kph') {
+    	return Wind
+    } else if (settings.windUnits == 'ms') {
+    	return (Wind * 0.277778).toDouble().trunc(1) +" ms"
+    } else if (settings.windUnits == 'mph') {
+    	return (Wind * 0.621371192).toDouble().trunc(1) +" mph"
+    } else if (settings.windUnits == 'kts') {
+    	return (Wind * 0.539956803).toDouble().trunc(1) +" kts"
     }
 }
 def lastUpdated(time) {
