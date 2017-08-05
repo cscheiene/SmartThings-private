@@ -1,5 +1,5 @@
 /**
- *  netatmo-rain module Date: 10.07.2017
+ *  netatmo-rain module Date: 05.08.2017
  *
  *  Copyright 2014 Brian Steere
  *
@@ -41,14 +41,14 @@ metadata {
     
 	tiles (scale: 2) {
 		multiAttributeTile(name:"main", type:"generic", width:6, height:4) {
-			tileAttribute("rain", key: "PRIMARY_CONTROL") {
-            	attributeState "rain",label:'${currentValue}', icon:"st.Weather.weather12", backgroundColor:"#00a0dc"
+			tileAttribute("rainUnits", key: "PRIMARY_CONTROL") {
+            	attributeState "default",label:'${currentValue}', icon:"st.Weather.weather12", backgroundColor:"#00a0dc"
             }
-            tileAttribute ("rainSumHour", key: "SECONDARY_CONTROL") {
-				attributeState "rainSumHour", label:'Last Hour: ${currentValue}'
+            tileAttribute ("rainSumHourUnits", key: "SECONDARY_CONTROL") {
+				attributeState "default", label:'Last Hour: ${currentValue}'
 			}
 		} 
- 		valueTile("rainSumDay", "device.rainSumDay", width: 2, height: 1, inactiveLabel: false) {
+ 		valueTile("rainSumDay", "device.rainSumDayUnits", width: 4, height: 1, inactiveLabel: false) {
  			state "default", label:'Total: ${currentValue}'
  		}
         valueTile("units", "units", width: 2, height: 1, inactiveLabel: false) {
@@ -76,7 +76,7 @@ metadata {
  			state "default", action:"refresh.refresh", icon:"st.secondary.refresh"
  		}        
         main (["main"])
- 		details(["main", "rainSumDay", "units", "battery", "lastupdate" ,"refresh"])
+ 		details(["main", "rainSumDay", "battery", "lastupdate" ,"refresh"])
 	}
 }
 

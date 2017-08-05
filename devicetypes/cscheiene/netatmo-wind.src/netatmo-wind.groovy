@@ -1,5 +1,5 @@
 /**
- *  netatmo-windmodule Date: 01.08.2017
+ *  netatmo-windmodule Date: 05.08.2017
  *
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
@@ -45,20 +45,20 @@ metadata {
     
 	tiles (scale: 2) {
 		multiAttributeTile(name:"main", type:"generic", width:6, height:4) {
-			tileAttribute("WindStrength", key: "PRIMARY_CONTROL") {
-            	attributeState "WindStrength", label:'${currentValue}', icon:"st.Weather.weather1", backgroundColor:"#00a0dc"
+			tileAttribute("WindStrengthUnits", key: "PRIMARY_CONTROL") {
+            	attributeState "default", label:'${currentValue}', icon:"st.Weather.weather1", backgroundColor:"#00a0dc"
             }
             tileAttribute ("WindDirection", key: "SECONDARY_CONTROL") {
 				attributeState "WindDirection", label:'Direction: ${currentValue}'
 			}
 		}        
- 		valueTile("GustStrength", "device.GustStrength", width: 2, height: 1, inactiveLabel: false) {
+ 		valueTile("GustStrength", "device.GustStrengthUnits", width: 2, height: 1, inactiveLabel: false) {
  			state "default", label:'Gust: ${currentValue}'
  		}
         valueTile("GustDirection", "device.GustDirection", width: 2, height: 1, inactiveLabel: false) {
  			state "default", label:'${currentValue}'            
  		}
-        valueTile("max_wind_str", "device.max_wind_str", width: 2, height: 1, inactiveLabel: false) {
+        valueTile("max_wind_str", "device.max_wind_strUnits", width: 2, height: 1, inactiveLabel: false) {
  			state "default", label:'Max: ${currentValue}'            
  		}
         valueTile("units", "device.units", width: 4, height: 1, inactiveLabel: false) {
@@ -92,7 +92,7 @@ metadata {
  		}        
         
         main (["main"])
- 		details(["main", "GustStrength", "GustDirection","battery", "max_wind_str","date_max_wind_str" ,"lastupdate","refresh", "units" ])
+ 		details(["main", "GustStrength", "GustDirection","battery", "max_wind_str","date_max_wind_str" ,"lastupdate","refresh"])
 	}
 }
 
