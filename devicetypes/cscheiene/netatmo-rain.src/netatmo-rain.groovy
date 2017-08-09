@@ -49,7 +49,7 @@ metadata {
 			}
 		} 
  		valueTile("rainSumDay", "device.rainSumDayUnits", width: 4, height: 1, inactiveLabel: false) {
- 			state "default", label:'Total: ${currentValue}'
+ 			state "default", label:'Total Day: ${currentValue}'
  		}
         valueTile("units", "units", width: 2, height: 1, inactiveLabel: false) {
  			state "default", label:'Units: ${currentValue}'            
