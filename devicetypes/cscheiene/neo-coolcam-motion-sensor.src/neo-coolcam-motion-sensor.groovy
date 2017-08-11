@@ -22,6 +22,7 @@ metadata {
 		capability "Sensor"
 		capability "Battery"
 		capability "Health Check"
+        capability "Illuminance Measurement"
 
 
         fingerprint mfr: "0258", prod: "0003", model: "1083", deviceJoinName: "Neo Coolcam Motion Sensor"
@@ -94,7 +95,8 @@ def zwaveEvent(physicalgraph.zwave.commands.switchbinaryv1.SwitchBinaryReport cm
 
 def zwaveEvent(physicalgraph.zwave.commands.sensorbinaryv1.SensorBinaryReport cmd)
 {
-	sensorValueEvent(cmd.sensorValue)
+//	sensorValueEvent(cmd.sensorValue)
+    log.debug "Sesnor Binary Report Received"
 }
 
 def zwaveEvent(physicalgraph.zwave.commands.sensoralarmv1.SensorAlarmReport cmd)
