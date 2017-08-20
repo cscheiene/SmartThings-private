@@ -24,6 +24,7 @@ metadata {
 		capability "Thermostat Operating State"
 		capability "Thermostat Setpoint"
 		capability "Temperature Measurement"
+        capability "Switch"
         
         
         attribute "autotemp", "string"
@@ -235,6 +236,11 @@ def setThermostatMode(String value) {
 
 def setThermostatFanMode(String value) {
 	sendEvent(name: "thermostatFanMode", value: value)
+}
+
+def on() {
+	sendEvent(name: "thermostatMode", value: "heat")
+    sendEvent(name: "thermostatOperatingState", value: "heating")
 }
 
 def off() {

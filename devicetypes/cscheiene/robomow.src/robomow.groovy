@@ -24,21 +24,6 @@ metadata {
 		capability "Configuration"
 		capability "Health Check"
 
-		fingerprint deviceId: "0x2001", inClusters: "0x30,0x80,0x84,0x85,0x86,0x72"
-		fingerprint deviceId: "0x07", inClusters: "0x30"
-		fingerprint deviceId: "0x0701", inClusters: "0x5E,0x98"
-		fingerprint deviceId: "0x0701", inClusters: "0x5E,0x86,0x72,0x98", outClusters: "0x5A,0x82"
-		fingerprint deviceId: "0x0701", inClusters: "0x5E,0x80,0x71,0x85,0x70,0x72,0x86,0x30,0x31,0x84,0x59,0x73,0x5A,0x8F,0x98,0x7A", outClusters:"0x20" // Philio multi+
-		fingerprint mfr:"0086", prod:"0002", model:"001D", deviceJoinName: "Aeon Labs Door/Window Sensor (Gen 5)"
-		fingerprint mfr:"0086", prod:"0102", model:"0070", deviceJoinName:  "Aeon Labs Door/Window Sensor 6"
-		fingerprint mfr:"0086", prod:"0102", model:"0059", deviceJoinName: "Aeon Labs Recessed Door Sensor"
-		fingerprint mfr:"014A", prod:"0001", model:"0002", deviceJoinName: "Ecolink Door/Window Sensor"
-		fingerprint mfr:"014A", prod:"0001", model:"0003", deviceJoinName: "Ecolink Tilt Sensor"
-		fingerprint mfr:"011A", prod:"0601", model:"0903", deviceJoinName: "Enerwave Magnetic Door/Window Sensor"
-		fingerprint mfr:"014F", prod:"2001", model:"0102", deviceJoinName: "Nortek GoControl Door/Window Sensor"
-		fingerprint mfr:"0063", prod:"4953", model:"3031", deviceJoinName: "Jasco Hinge Pin Door Sensor"
-		fingerprint mfr:"019A", prod:"0003", model:"0003", deviceJoinName: "Sensative Strips"
-
 	}
 
 	// simulator metadata
@@ -131,13 +116,13 @@ def zwaveEvent(physicalgraph.zwave.commands.basicv1.BasicReport cmd)
 	sensorValueEvent(cmd.value)
     log.debug "basicreport"
 }
-
+/*
 def zwaveEvent(physicalgraph.zwave.commands.basicv1.BasicSet cmd)
 {
 	sensorValueEvent(cmd.value)
     log.debug "basicrset"
 }
-
+*/
 def zwaveEvent(physicalgraph.zwave.commands.switchbinaryv1.SwitchBinaryReport cmd)
 {
 	sensorValueEvent(cmd.value)
