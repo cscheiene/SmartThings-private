@@ -220,6 +220,7 @@ def parse(String description) {
 def setHeatingSetpoint(Double degreesF) {
 	log.debug "setHeatingSetpoint($degreesF)"
 	sendEvent(name: "heatingSetpoint", value: degreesF)
+    sendEvent(name: "thermostatSetpoint", value: heatingSetpoint)
 	evaluate(device.currentValue("temperature"), degreesF, device.currentValue("coolingSetpoint"))
 }
 
@@ -270,6 +271,7 @@ def cool() {
     sendEvent(name: "thermostatOperatingState", value: "cooling")
     sendEvent(name: "coolingSetpoint", value: 20)
     sendEvent(name: "thermostatFanMode", value: "auto")
+    sendEvent(name: "thermostatSetpoint", value: coolingSetpoint)
 	//evaluate(device.currentValue("temperature"), device.currentValue("heatingSetpoint"), device.currentValue("coolingSetpoint"))
 }
 
