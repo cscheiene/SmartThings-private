@@ -21,6 +21,7 @@ metadata {
 		capability "Lock Codes"
 		capability "Battery"
 		//capability "Health Check"
+        capability "Switch"
 
 		command "unlockwtimeout"
 
@@ -495,7 +496,8 @@ def zwaveEvent(physicalgraph.zwave.commands.applicationstatusv1.ApplicationRejec
 }
 
 def zwaveEvent(physicalgraph.zwave.Command cmd) {
-	createEvent(displayed: false, descriptionText: "$device.displayName: $cmd")
+	createEvent(displayed: true, descriptionText: "$device.displayName: $cmd")
+    log.debug "Unhandled: ${cmd}"
 }
 
 def lockAndCheck(doorLockMode) {
@@ -530,6 +532,16 @@ def followupStateCheck() {
 def stateCheck() {
 	sendHubCommand(new physicalgraph.device.HubAction(secure(zwave.doorLockV1.doorLockOperationGet())))
 }
+
+def on() {
+	sendEvent(name: "lock", value: "locked")
+}
+
+def off() {
+	sendEvent(name: "lock", value: "unlocked")
+}
+
+
 
 def refresh() {
 	def cmds = [secure(zwave.doorLockV1.doorLockOperationGet())]
