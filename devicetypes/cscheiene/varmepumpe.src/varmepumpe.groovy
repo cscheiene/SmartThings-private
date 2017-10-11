@@ -138,7 +138,7 @@ metadata {
 			state "heating", label:'${name}', backgroundColor:"#e86d13"
 			state "cooling", label:'${name}', backgroundColor:"#00A0DC"
 		}
-                controlTile("heatSliderControl", "device.heatingSetpoint", "slider", height: 2, width: 4, inactiveLabel: false, range:"(21..24)") {
+                controlTile("heatSliderControl", "device.heatingSetpoint", "slider", height: 2, width: 2, inactiveLabel: false, range:"(21..24)") {
             state "setHeatingSetpoint", action:"thermostat.setHeatingSetpoint", backgroundColor: "#d04e00"
         }
                 controlTile("coolSliderControl", "device.coolingSetpoint", "slider", height: 2, width: 4, inactiveLabel: false, range:"(21..24)") {
@@ -160,9 +160,9 @@ metadata {
 
 		main("thermostatMulti")
 		details([
-			"thermostatMulti","heat","cool","off","heatSliderControl","heatingSetpoint", "fanMode", "autotemp"		 
+			"thermostatMulti","heat","cool","off","heatSliderControl", "fanMode", "autotemp"		 
 			//"heatDown", "heatUp",
-			//, "coolDown", "coolUp","temperature","tempDown","tempUp","operatingState"
+			//, "coolDown", "coolUp","temperature","tempDown","tempUp","operatingState","heatingSetpoint"
 		])
 	}
 }
