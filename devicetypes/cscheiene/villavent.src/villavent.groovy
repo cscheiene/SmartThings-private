@@ -59,7 +59,7 @@ metadata {
 				attributeState "power", label:'${currentValue} W'
 			}
 		} 
-    	valueTile("main", "device.power", decoration: "flat", width: 3, height: 2, canChangeIcon: true) {
+    	standardTile("powername", "device.power", decoration: "flat", width: 3, height: 2) {
             state("0", label:'Off')
             state("13", label:'Low')
             state("14", label:'Low')
@@ -77,7 +77,6 @@ metadata {
             state("50", label:'Normal')
             state("51", label:'Normal')
             state("52", label:'Normal')
-
             state("106", label:'High')
             state("107", label:'High')
             state("108", label:'High')
@@ -112,8 +111,8 @@ metadata {
 			state "default", label:'', action:"refresh.refresh", icon:"st.secondary.refresh"
 		}    
 
-		main "main"
-		details(["switch","energy","main","refresh","reset","configure"])  
+		main "powername"
+		details(["switch","energy","powername","refresh","reset","configure"])  
         //details(["switch","energy","reset","refresh","configure"])
 	}
 
