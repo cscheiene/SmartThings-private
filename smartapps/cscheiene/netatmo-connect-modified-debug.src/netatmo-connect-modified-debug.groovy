@@ -522,7 +522,7 @@ def poll() {
 	log.debug "Polling"
 	getDeviceList();
 	def children = getChildDevices()
-    log.debug "State: ${state.deviceState}"
+    log.debug "Time Zone: ${location.timeZone}"
 
 	settings.devices.each { deviceId ->
 		def detail = state?.deviceDetail[deviceId]
@@ -533,29 +533,29 @@ def poll() {
 		switch(detail?.type) {
 			case 'NAMain':
 				log.debug "Updating NAMain $data"
-				//child?.sendEvent(name: 'temperature', value: cToPref(data['Temperature']) as float, unit: getTemperatureScale())
-				//child?.sendEvent(name: 'carbonDioxide', value: data['CO2'], unit: "ppm")
-				//child?.sendEvent(name: 'humidity', value: data['Humidity'], unit: "%")
-                //child?.sendEvent(name: 'temp_trend', value: data['temp_trend'], unit: "")                
-                //child?.sendEvent(name: 'pressure', value: (pressToPref(data['Pressure'])).toDouble().trunc(2), unit: settings.pressUnits)
-				//child?.sendEvent(name: 'soundPressureLevel', value: data['Noise'], unit: "db")
-                //child?.sendEvent(name: 'sound', value: noiseTosound(data['Noise']))
-                //child?.sendEvent(name: 'pressure_trend', value: data['pressure_trend'], unit: "")
-                //child?.sendEvent(name: 'min_temp', value: cToPref(data['min_temp']) as float, unit: getTemperatureScale())
-                //child?.sendEvent(name: 'max_temp', value: cToPref(data['max_temp']) as float, unit: getTemperatureScale())
-                //child?.sendEvent(name: 'units', value: settings.pressUnits)
+				child?.sendEvent(name: 'temperature', value: cToPref(data['Temperature']) as float, unit: getTemperatureScale())
+				child?.sendEvent(name: 'carbonDioxide', value: data['CO2'], unit: "ppm")
+				child?.sendEvent(name: 'humidity', value: data['Humidity'], unit: "%")
+                child?.sendEvent(name: 'temp_trend', value: data['temp_trend'], unit: "")                
+                child?.sendEvent(name: 'pressure', value: (pressToPref(data['Pressure'])).toDouble().trunc(2), unit: settings.pressUnits)
+				child?.sendEvent(name: 'soundPressureLevel', value: data['Noise'], unit: "db")
+                child?.sendEvent(name: 'sound', value: noiseTosound(data['Noise']))
+                child?.sendEvent(name: 'pressure_trend', value: data['pressure_trend'], unit: "")
+                child?.sendEvent(name: 'min_temp', value: cToPref(data['min_temp']) as float, unit: getTemperatureScale())
+                child?.sendEvent(name: 'max_temp', value: cToPref(data['max_temp']) as float, unit: getTemperatureScale())
+                child?.sendEvent(name: 'units', value: settings.pressUnits)
                 //child?.sendEvent(name: 'lastupdate', value: lastUpdated(data['time_utc']), unit: "")
                 //child?.sendEvent(name: 'date_min_temp', value: lastUpdated(data['date_min_temp']), unit: "")
                 //child?.sendEvent(name: 'date_max_temp', value: lastUpdated(data['date_max_temp']), unit: "")
 				break;
 			case 'NAModule1':
 				log.debug "Updating NAModule1 $data"
-				//child?.sendEvent(name: 'temperature', value: cToPref(data['Temperature']) as float, unit: getTemperatureScale())
-				//child?.sendEvent(name: 'humidity', value: data['Humidity'], unit: "%")
-                //child?.sendEvent(name: 'temp_trend', value: data['temp_trend'], unit: "")
-                //child?.sendEvent(name: 'min_temp', value: cToPref(data['min_temp']) as float, unit: getTemperatureScale())
-                //child?.sendEvent(name: 'max_temp', value: cToPref(data['max_temp']) as float, unit: getTemperatureScale())
-                //child?.sendEvent(name: 'battery', value: detail['battery_percent'], unit: "%")
+				child?.sendEvent(name: 'temperature', value: cToPref(data['Temperature']) as float, unit: getTemperatureScale())
+				child?.sendEvent(name: 'humidity', value: data['Humidity'], unit: "%")
+                child?.sendEvent(name: 'temp_trend', value: data['temp_trend'], unit: "")
+                child?.sendEvent(name: 'min_temp', value: cToPref(data['min_temp']) as float, unit: getTemperatureScale())
+                child?.sendEvent(name: 'max_temp', value: cToPref(data['max_temp']) as float, unit: getTemperatureScale())
+                child?.sendEvent(name: 'battery', value: detail['battery_percent'], unit: "%")
                 //child?.sendEvent(name: 'lastupdate', value: lastUpdated(data['time_utc']), unit: "")
                 //child?.sendEvent(name: 'date_min_temp', value: lastUpdated(data['date_min_temp']), unit: "")
                 //child?.sendEvent(name: 'date_max_temp', value: lastUpdated(data['date_max_temp']), unit: "")
