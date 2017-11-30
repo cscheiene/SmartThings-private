@@ -1,5 +1,5 @@
 /**
- * Netatmo Connect Date: 21.11.2017
+ * Netatmo Connect Date: 30.11.2017
  */
 
 import java.text.DecimalFormat
