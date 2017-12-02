@@ -1,5 +1,5 @@
 /**
- * Netatmo Connect Date: 30.11.2017
+ * Netatmo Connect Date: 01.12.2017
  */
 
 import java.text.DecimalFormat
@@ -19,7 +19,7 @@ private getBuildRedirectUrl() { "${serverUrl}/oauth/initialize?appId=${app.id}&a
 
 // Automatically generated. Make future change here.
 definition(
-	name: "Netatmo (Connect) Modified debug",
+	name: "Netatmo (Connect) Modified Debug",
 	namespace: "cscheiene",
 	author: "Brian Steere,cscheiene",
 	description: "Netatmo Integration",
@@ -59,7 +59,7 @@ def authPage() {
 	if (canInstallLabs()) {
 
 		def redirectUrl = getBuildRedirectUrl()
-		// log.debug "Redirect url = ${redirectUrl}"
+		 log.debug "Redirect url = ${redirectUrl}"
 
 		if (state.authToken) {
 			description = "Tap 'Next' to proceed"
@@ -114,13 +114,13 @@ def oauthInitUrl() {
 		scope: "read_station"
 	]
 
-	// log.debug "REDIRECT URL: ${getVendorAuthPath() + toQueryString(oauthParams)}"
+	 log.debug "REDIRECT URL: ${getVendorAuthPath() + toQueryString(oauthParams)}"
 
 	redirect (location: getVendorAuthPath() + toQueryString(oauthParams))
 }
 
 def callback() {
-	// log.debug "callback()>> params: $params, params.code ${params.code}"
+	 log.debug "callback()>> params: $params, params.code ${params.code}"
 
 	def code = params.code
 	def oauthState = params.state
@@ -136,7 +136,7 @@ def callback() {
 			scope: "read_station"
 		]
 
-		// log.debug "TOKEN URL: ${getVendorTokenPath() + toQueryString(tokenParams)}"
+		 log.debug "TOKEN URL: ${getVendorTokenPath() + toQueryString(tokenParams)}"
 
 		def tokenUrl = getVendorTokenPath()
 		def params = [
@@ -145,7 +145,7 @@ def callback() {
 			body: tokenParams
 		]
 
-		// log.debug "PARAMS: ${params}"
+		 log.debug "PARAMS: ${params}"
 
 		httpPost(params) { resp ->
 
@@ -157,7 +157,7 @@ def callback() {
 				state.refreshToken = data.refresh_token
 				state.authToken = data.access_token
 				state.tokenExpires = now() + (data.expires_in * 1000)
-				// log.debug "swapped token: $resp.data"
+				 log.debug "swapped token: $resp.data"
 			}
 		}
 
@@ -293,7 +293,7 @@ def refreshToken() {
 
 			response.data.each {key, value ->
 				def data = slurper.parseText(key);
-				// log.debug "Data: $data"
+				 log.debug "Data: $data"
 
 				state.refreshToken = data.refresh_token
 				state.accessToken = data.access_token
@@ -522,17 +522,21 @@ def poll() {
 	log.debug "Polling"
 	getDeviceList();
 	def children = getChildDevices()
-    log.debug "Time Zone: ${location.timeZone}"
+    //log.debug "State: ${state.deviceState}"
+    //log.debug "Time Zone: ${location.timeZone}"
+    
+    if(location.timeZone == null)
+       log.warn "Location is not set! Go to your ST app and set your location"
 
 	settings.devices.each { deviceId ->
 		def detail = state?.deviceDetail[deviceId]
 		def data = state?.deviceState[deviceId]
 		def child = children?.find { it.deviceNetworkId == deviceId }
 
-		log.debug "Update: $child";
+		//log.debug "Update: $child";
 		switch(detail?.type) {
 			case 'NAMain':
-				log.debug "Updating NAMain $data"
+				log.debug "Updating Basestation $data"
 				child?.sendEvent(name: 'temperature', value: cToPref(data['Temperature']) as float, unit: getTemperatureScale())
 				child?.sendEvent(name: 'carbonDioxide', value: data['CO2'], unit: "ppm")
 				child?.sendEvent(name: 'humidity', value: data['Humidity'], unit: "%")
@@ -544,63 +548,63 @@ def poll() {
                 child?.sendEvent(name: 'min_temp', value: cToPref(data['min_temp']) as float, unit: getTemperatureScale())
                 child?.sendEvent(name: 'max_temp', value: cToPref(data['max_temp']) as float, unit: getTemperatureScale())
                 child?.sendEvent(name: 'units', value: settings.pressUnits)
-                //child?.sendEvent(name: 'lastupdate', value: lastUpdated(data['time_utc']), unit: "")
-                //child?.sendEvent(name: 'date_min_temp', value: lastUpdated(data['date_min_temp']), unit: "")
-                //child?.sendEvent(name: 'date_max_temp', value: lastUpdated(data['date_max_temp']), unit: "")
+                child?.sendEvent(name: 'lastupdate', value: lastUpdated(data['time_utc']), unit: "")
+                child?.sendEvent(name: 'date_min_temp', value: lastUpdated(data['date_min_temp']), unit: "")
+                child?.sendEvent(name: 'date_max_temp', value: lastUpdated(data['date_max_temp']), unit: "")
 				break;
 			case 'NAModule1':
-				log.debug "Updating NAModule1 $data"
+				log.debug "Updating Outdoor Module $data"
 				child?.sendEvent(name: 'temperature', value: cToPref(data['Temperature']) as float, unit: getTemperatureScale())
 				child?.sendEvent(name: 'humidity', value: data['Humidity'], unit: "%")
                 child?.sendEvent(name: 'temp_trend', value: data['temp_trend'], unit: "")
                 child?.sendEvent(name: 'min_temp', value: cToPref(data['min_temp']) as float, unit: getTemperatureScale())
                 child?.sendEvent(name: 'max_temp', value: cToPref(data['max_temp']) as float, unit: getTemperatureScale())
                 child?.sendEvent(name: 'battery', value: detail['battery_percent'], unit: "%")
-                //child?.sendEvent(name: 'lastupdate', value: lastUpdated(data['time_utc']), unit: "")
-                //child?.sendEvent(name: 'date_min_temp', value: lastUpdated(data['date_min_temp']), unit: "")
-                //child?.sendEvent(name: 'date_max_temp', value: lastUpdated(data['date_max_temp']), unit: "")
+                child?.sendEvent(name: 'lastupdate', value: lastUpdated(data['time_utc']), unit: "")
+                child?.sendEvent(name: 'date_min_temp', value: lastUpdated(data['date_min_temp']), unit: "")
+                child?.sendEvent(name: 'date_max_temp', value: lastUpdated(data['date_max_temp']), unit: "")
 				break;
 			case 'NAModule3':
-				log.debug "Updating NAModule3 $data"
-				//child?.sendEvent(name: 'rain', value: (rainToPref(data['Rain'])), unit: settings.rainUnits)
-				//child?.sendEvent(name: 'rainSumHour', value: (rainToPref(data['sum_rain_1'])), unit: settings.rainUnits)
-				//child?.sendEvent(name: 'rainSumDay', value: (rainToPref(data['sum_rain_24'])), unit: settings.rainUnits)
-				//child?.sendEvent(name: 'units', value: settings.rainUnits)
-                //child?.sendEvent(name: 'battery', value: detail['battery_percent'], unit: "%")
-                //child?.sendEvent(name: 'lastupdate', value: lastUpdated(data['time_utc']), unit: "")
-				//child?.sendEvent(name: 'rainUnits', value: rainToPrefUnits(data['Rain']), displayed: false)
-				//child?.sendEvent(name: 'rainSumHourUnits', value: rainToPrefUnits(data['sum_rain_1']), displayed: false)
-				//child?.sendEvent(name: 'rainSumDayUnits', value: rainToPrefUnits(data['sum_rain_24']), displayed: false)                
+				log.debug "Updating Rain Module $data"
+				child?.sendEvent(name: 'rain', value: (rainToPref(data['Rain'])), unit: settings.rainUnits)
+				child?.sendEvent(name: 'rainSumHour', value: (rainToPref(data['sum_rain_1'])), unit: settings.rainUnits)
+				child?.sendEvent(name: 'rainSumDay', value: (rainToPref(data['sum_rain_24'])), unit: settings.rainUnits)
+				child?.sendEvent(name: 'units', value: settings.rainUnits)
+                child?.sendEvent(name: 'battery', value: detail['battery_percent'], unit: "%")
+                child?.sendEvent(name: 'lastupdate', value: lastUpdated(data['time_utc']), unit: "")
+				child?.sendEvent(name: 'rainUnits', value: rainToPrefUnits(data['Rain']), displayed: false)
+				child?.sendEvent(name: 'rainSumHourUnits', value: rainToPrefUnits(data['sum_rain_1']), displayed: false)
+				child?.sendEvent(name: 'rainSumDayUnits', value: rainToPrefUnits(data['sum_rain_24']), displayed: false)                
 				break;
 			case 'NAModule4':
-				log.debug "Updating NAModule4 $data"
-				//child?.sendEvent(name: 'temperature', value: cToPref(data['Temperature']) as float, unit: getTemperatureScale())
-				//child?.sendEvent(name: 'carbonDioxide', value: data['CO2'], unit: "ppm")
-				//child?.sendEvent(name: 'humidity', value: data['Humidity'], unit: "%")
-                //child?.sendEvent(name: 'temp_trend', value: data['temp_trend'], unit: "")                
-                //child?.sendEvent(name: 'min_temp', value: cToPref(data['min_temp']) as float, unit: getTemperatureScale())
-                //child?.sendEvent(name: 'max_temp', value: cToPref(data['max_temp']) as float, unit: getTemperatureScale())
-                //child?.sendEvent(name: 'battery', value: detail['battery_percent'], unit: "%")
-                //child?.sendEvent(name: 'lastupdate', value: lastUpdated(data['time_utc']), unit: "")
-                //child?.sendEvent(name: 'date_min_temp', value: lastUpdated(data['date_min_temp']), unit: "")
-                //child?.sendEvent(name: 'date_max_temp', value: lastUpdated(data['date_max_temp']), unit: "")
+				log.debug "Updating Additional Module $data"
+				child?.sendEvent(name: 'temperature', value: cToPref(data['Temperature']) as float, unit: getTemperatureScale())
+				child?.sendEvent(name: 'carbonDioxide', value: data['CO2'], unit: "ppm")
+				child?.sendEvent(name: 'humidity', value: data['Humidity'], unit: "%")
+                child?.sendEvent(name: 'temp_trend', value: data['temp_trend'], unit: "")                
+                child?.sendEvent(name: 'min_temp', value: cToPref(data['min_temp']) as float, unit: getTemperatureScale())
+                child?.sendEvent(name: 'max_temp', value: cToPref(data['max_temp']) as float, unit: getTemperatureScale())
+                child?.sendEvent(name: 'battery', value: detail['battery_percent'], unit: "%")
+                child?.sendEvent(name: 'lastupdate', value: lastUpdated(data['time_utc']), unit: "")
+                child?.sendEvent(name: 'date_min_temp', value: lastUpdated(data['date_min_temp']), unit: "")
+                child?.sendEvent(name: 'date_max_temp', value: lastUpdated(data['date_max_temp']), unit: "")
 				break;
             case 'NAModule2':
-				log.debug "Updating NAModule2 $data"
-				//child?.sendEvent(name: 'WindAngle', value: data['WindAngle'], unit: "°", displayed: false)
-                //child?.sendEvent(name: 'GustAngle', value: data['GustAngle'], unit: "°", displayed: false)
-                //child?.sendEvent(name: 'battery', value: detail['battery_percent'], unit: "%")
-				//child?.sendEvent(name: 'WindStrength', value: (windToPref(data['WindStrength'])).toDouble().trunc(1), unit: settings.windUnits)
-                //child?.sendEvent(name: 'GustStrength', value: (windToPref(data['GustStrength'])).toDouble().trunc(1), unit: settings.windUnits)
-                //child?.sendEvent(name: 'max_wind_str', value: (windToPref(data['max_wind_str'])).toDouble().trunc(1), unit: settings.windUnits)
-                //child?.sendEvent(name: 'units', value: settings.windUnits)
-                //child?.sendEvent(name: 'lastupdate', value: lastUpdated(data['time_utc']), unit: "")
-                //child?.sendEvent(name: 'date_max_wind_str', value: lastUpdated(data['date_max_wind_str']), unit: "")
-                //child?.sendEvent(name: 'WindDirection', value: windTotext(data['WindAngle']))
-                //child?.sendEvent(name: 'GustDirection', value: gustTotext(data['GustAngle']))
-				//child?.sendEvent(name: 'WindStrengthUnits', value: windToPrefUnits(data['WindStrength']), displayed: false)
-                //child?.sendEvent(name: 'GustStrengthUnits', value: windToPrefUnits(data['GustStrength']), displayed: false)
-                //child?.sendEvent(name: 'max_wind_strUnits', value: windToPrefUnits(data['max_wind_str']), displayed: false)               
+				log.debug "Updating Wind Module $data"
+				child?.sendEvent(name: 'WindAngle', value: data['WindAngle'], unit: "°", displayed: false)
+                child?.sendEvent(name: 'GustAngle', value: data['GustAngle'], unit: "°", displayed: false)
+                child?.sendEvent(name: 'battery', value: detail['battery_percent'], unit: "%")
+				child?.sendEvent(name: 'WindStrength', value: (windToPref(data['WindStrength'])).toDouble().trunc(1), unit: settings.windUnits)
+                child?.sendEvent(name: 'GustStrength', value: (windToPref(data['GustStrength'])).toDouble().trunc(1), unit: settings.windUnits)
+                child?.sendEvent(name: 'max_wind_str', value: (windToPref(data['max_wind_str'])).toDouble().trunc(1), unit: settings.windUnits)
+                child?.sendEvent(name: 'units', value: settings.windUnits)
+                child?.sendEvent(name: 'lastupdate', value: lastUpdated(data['time_utc']), unit: "")
+                child?.sendEvent(name: 'date_max_wind_str', value: lastUpdated(data['date_max_wind_str']), unit: "")
+                child?.sendEvent(name: 'WindDirection', value: windTotext(data['WindAngle']))
+                child?.sendEvent(name: 'GustDirection', value: gustTotext(data['GustAngle']))
+				child?.sendEvent(name: 'WindStrengthUnits', value: windToPrefUnits(data['WindStrength']), displayed: false)
+                child?.sendEvent(name: 'GustStrengthUnits', value: windToPrefUnits(data['GustStrength']), displayed: false)
+                child?.sendEvent(name: 'max_wind_strUnits', value: windToPrefUnits(data['max_wind_str']), displayed: false)               
                 break;
 		}
 	}
