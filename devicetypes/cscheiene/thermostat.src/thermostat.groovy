@@ -59,10 +59,10 @@ metadata {
 					[value: 98, color: "#bc2323"]
 				]
             }
-			/*tileAttribute("device.heatingSetpoint", key: "VALUE_CONTROL") {
+			tileAttribute("device.heatingSetpoint", key: "VALUE_CONTROL") {
 				attributeState("VALUE_UP", action: "heatUp")
 				attributeState("VALUE_DOWN", action: "heatDown")
-			}*/
+			}
 			tileAttribute("device.humidity", key: "SECONDARY_CONTROL") {
 				attributeState("default", label:'${currentValue}%', defaultState: true)
 			}
