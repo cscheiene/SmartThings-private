@@ -47,7 +47,7 @@ metadata {
 	}
 
 	tiles(scale: 2) {
-		multiAttributeTile(name:"thermostatMulti", type:"thermostat", width:6, height:4) {
+		multiAttributeTile(name:"thermostatMulti", type:"thermostat", width:6, height:4, canChangeIcon: true) {
 			tileAttribute("device.temperature", key: "PRIMARY_CONTROL") {
             	attributeState "temperature",label:'${currentValue}°', icon: "https://d30y9cdsu7xlg0.cloudfront.net/png/308250-200.png", defaultState: true, backgroundColors:[
                 	[value: 32, color: "#153591"],
