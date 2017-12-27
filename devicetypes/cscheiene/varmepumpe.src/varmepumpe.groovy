@@ -39,7 +39,11 @@ metadata {
 		command "setHumidity", ["number"]        
         command "autotempOn"
         command "autotempOff"
-        command "setThermostatMode"
+        command "setThermostatMode", ["string"]
+        command "setHeatingSetpoint", ["number"]
+        command "setCoolingSetpoint", ["number"]
+        command "heat"
+        command "cool"
 	}
 
 	tiles(scale: 2) {
