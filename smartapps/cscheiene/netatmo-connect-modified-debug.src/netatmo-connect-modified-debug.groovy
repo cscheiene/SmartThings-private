@@ -1,5 +1,5 @@
 /**
- * Netatmo Connect Date: 09.91.2018
+ * Netatmo Connect Date: 01.12.2017
  */
 
 import java.text.DecimalFormat
@@ -270,46 +270,47 @@ def connectionStatus(message, redirectUrl = null) {
 }
 
 def refreshToken() {
-	log.debug "In refreshToken"
+	// Check if State has a refresh token
+	if (state.refreshToken) {
+        log.debug "running refreshToken()"
 
-	def oauthParams = [
-		client_secret: getClientSecret(),
-		client_id: getClientId(),
-		grant_type: "refresh_token",
-		refresh_token: state.refreshToken
-	]
+        def oauthParams = [
+            grant_type: "refresh_token",
+            refresh_token: state.refreshToken,
+            client_secret: getClientSecret(),
+            client_id: getClientId(),
+        ]
 
-	def tokenUrl = getVendorTokenPath()
-	def params = [
-		uri: tokenUrl,
-		contentType: 'application/x-www-form-urlencoded',
-		body: oauthParams,
-	]
+        def tokenUrl = getVendorTokenPath()
+        
+        def requestOauthParams = [
+            uri: tokenUrl,
+            requestContentType: 'application/x-www-form-urlencoded',
+            body: oauthParams
+        ]
+        
+        // log.debug "PARAMS: ${requestOauthParams}"
 
-	// OAuth Step 2: Request access token with our client Secret and OAuth "Code"
-	try {
-		httpPost(params) { response ->
-			def slurper = new JsonSlurper();
+        try {
+            httpPost(requestOauthParams) { resp ->
+            	//log.debug "Data: ${resp.data}"
+                state.refreshToken = resp.data.refresh_token
+                state.authToken = resp.data.access_token
+                // resp.data.expires_in is in milliseconds so we need to convert it to seconds
+                state.tokenExpires = now() + (resp.data.expires_in * 1000)
+                return true
+            }
+        } catch (e) {
+            log.debug "refreshToken() failed: $e"
+        }
 
-			response.data.each {key, value ->
-				def data = slurper.parseText(key);
-				// log.debug "Data: $data"
-
-				state.refreshToken = data.refresh_token
-				state.accessToken = data.access_token
-				state.tokenExpires = now() + (data.expires_in * 1000)
-				return true
-			}
-
-		}
-	} catch (Exception e) {
-		log.debug "Error: $e"
-	}
-
-	// We didn't get an access token
-	if ( !state.accessToken ) {
-		return false
-	}
+        // If we didn't get an authToken
+        if (!state.authToken) {
+            return false
+        }
+	} else {
+    	return false
+    }
 }
 
 String toQueryString(Map m) {
