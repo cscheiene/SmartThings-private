@@ -1,5 +1,5 @@
 /**
- * Netatmo Connect Date: 13.12.2017
+ * Netatmo Connect Date: 09.91.2018
  */
 
 import java.text.DecimalFormat
@@ -59,7 +59,7 @@ def authPage() {
 	if (canInstallLabs()) {
 
 		def redirectUrl = getBuildRedirectUrl()
-		 log.debug "Redirect url = ${redirectUrl}"
+		// log.debug "Redirect url = ${redirectUrl}"
 
 		if (state.authToken) {
 			description = "Tap 'Next' to proceed"
@@ -114,13 +114,13 @@ def oauthInitUrl() {
 		scope: "read_station"
 	]
 
-	 log.debug "REDIRECT URL: ${getVendorAuthPath() + toQueryString(oauthParams)}"
+	// log.debug "REDIRECT URL: ${getVendorAuthPath() + toQueryString(oauthParams)}"
 
 	redirect (location: getVendorAuthPath() + toQueryString(oauthParams))
 }
 
 def callback() {
-	 log.debug "callback()>> params: $params, params.code ${params.code}"
+	// log.debug "callback()>> params: $params, params.code ${params.code}"
 
 	def code = params.code
 	def oauthState = params.state
@@ -136,7 +136,7 @@ def callback() {
 			scope: "read_station"
 		]
 
-		 log.debug "TOKEN URL: ${getVendorTokenPath() + toQueryString(tokenParams)}"
+		// log.debug "TOKEN URL: ${getVendorTokenPath() + toQueryString(tokenParams)}"
 
 		def tokenUrl = getVendorTokenPath()
 		def params = [
@@ -145,7 +145,7 @@ def callback() {
 			body: tokenParams
 		]
 
-		 log.debug "PARAMS: ${params}"
+		// log.debug "PARAMS: ${params}"
 
 		httpPost(params) { resp ->
 
@@ -154,10 +154,10 @@ def callback() {
 			resp.data.each { key, value ->
 				def data = slurper.parseText(key)
 
-				state.refreshToken = data.refresh_token
-				state.authToken = data.access_token
-				state.tokenExpires = now() + (data.expires_in * 1000)
-				 log.debug "swapped token: $resp.data"
+				state.refreshToken = resp.data.refresh_token
+				state.authToken = resp.data.access_token
+				state.tokenExpires = now() + (resp.data.expires_in * 1000)
+				// log.debug "swapped token: $resp.data"
 			}
 		}
 
@@ -293,7 +293,7 @@ def refreshToken() {
 
 			response.data.each {key, value ->
 				def data = slurper.parseText(key);
-				 log.debug "Data: $data"
+				// log.debug "Data: $data"
 
 				state.refreshToken = data.refresh_token
 				state.accessToken = data.access_token
@@ -386,28 +386,56 @@ def uninstalled() {
 }
 
 def getDeviceList() {
-	log.debug "In getDeviceList"
+	log.debug "Refreshing station data"
+def deviceList = [:]
+def moduleName = null
+state.deviceDetail = [:]
+state.deviceState = [:]
 
-	def deviceList = [:]
-	state.deviceDetail = [:]
-	state.deviceState = [:]
-
-        apiGet("/api/getstationsdata") { resp ->
-            resp.data.body.devices.each { value ->
-                def key = value._id
+apiGet("/api/getstationsdata",["get_favorites":true]) { resp ->
+    	state.response = resp.data.body
+        resp.data.body.devices.each { value ->
+            def key = value._id
+            if (value.module_name != null) {
                 deviceList[key] = "${value.station_name}: ${value.module_name}"
                 state.deviceDetail[key] = value
                 state.deviceState[key] = value.dashboard_data
-                value.modules.each { value2 ->            
-                    def key2 = value2._id
+                }
+
+            value.modules.each { value2 ->            
+                def key2 = value2._id
+
+				if (value2.module_name != null) {
                     deviceList[key2] = "${value.station_name}: ${value2.module_name}"
                     state.deviceDetail[key2] = value2
-                    state.deviceState[key2] = value2.dashboard_data            
-                }
+                    state.deviceState[key2] = value2.dashboard_data
+                    }
+				else {
+                    switch(value2.type) {
+                    case "NAModule1":
+                    	moduleName = "Outdoor ${value.station_name}" 
+                        break
+                    case "NAModule2":
+                    	moduleName = "Wind ${value.station_name}" 
+                        break
+                    case "NAModule3":
+                    	moduleName = "Rain ${value.station_name}" 
+                        break
+                    case "NAModule4":
+                    	moduleName = "Additional ${value.station_name}" 
+                        break
+                        }
+              
+                    deviceList[key2] = "${value.station_name}: ${moduleName}"
+                    state.deviceDetail[key2] = value2 << ["module_name" : moduleName]
+                    state.deviceState[key2] = value2.dashboard_data						
+                	}
             }
         }
+    }
 
-	return deviceList.sort() { it.value.toLowerCase() }
+return deviceList.sort() { it.value.toLowerCase() }
+
 }
 
 
