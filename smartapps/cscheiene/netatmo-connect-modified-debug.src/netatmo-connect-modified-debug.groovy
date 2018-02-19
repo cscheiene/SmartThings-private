@@ -1,5 +1,5 @@
 /**
- * Netatmo Connect Date: 01.12.2017
+ * Netatmo Connect
  */
 
 import java.text.DecimalFormat
@@ -154,9 +154,9 @@ def callback() {
 			resp.data.each { key, value ->
 				def data = slurper.parseText(key)
 
-				state.refreshToken = resp.data.refresh_token
-				state.authToken = resp.data.access_token
-				state.tokenExpires = now() + (resp.data.expires_in * 1000)
+				state.refreshToken = data.refresh_token
+				state.authToken = data.access_token
+				state.tokenExpires = now() + (data.expires_in * 1000)
 				// log.debug "swapped token: $resp.data"
 			}
 		}
@@ -270,47 +270,46 @@ def connectionStatus(message, redirectUrl = null) {
 }
 
 def refreshToken() {
-	// Check if State has a refresh token
-	if (state.refreshToken) {
-        log.debug "running refreshToken()"
+	log.debug "In refreshToken"
 
-        def oauthParams = [
-            grant_type: "refresh_token",
-            refresh_token: state.refreshToken,
-            client_secret: getClientSecret(),
-            client_id: getClientId(),
-        ]
+	def oauthParams = [
+		client_secret: getClientSecret(),
+		client_id: getClientId(),
+		grant_type: "refresh_token",
+		refresh_token: state.refreshToken
+	]
 
-        def tokenUrl = getVendorTokenPath()
-        
-        def requestOauthParams = [
-            uri: tokenUrl,
-            requestContentType: 'application/x-www-form-urlencoded',
-            body: oauthParams
-        ]
-        
-        // log.debug "PARAMS: ${requestOauthParams}"
+	def tokenUrl = getVendorTokenPath()
+	def params = [
+		uri: tokenUrl,
+		contentType: 'application/x-www-form-urlencoded',
+		body: oauthParams,
+	]
 
-        try {
-            httpPost(requestOauthParams) { resp ->
-            	//log.debug "Data: ${resp.data}"
-                state.refreshToken = resp.data.refresh_token
-                state.authToken = resp.data.access_token
-                // resp.data.expires_in is in milliseconds so we need to convert it to seconds
-                state.tokenExpires = now() + (resp.data.expires_in * 1000)
-                return true
-            }
-        } catch (e) {
-            log.debug "refreshToken() failed: $e"
-        }
+	// OAuth Step 2: Request access token with our client Secret and OAuth "Code"
+	try {
+		httpPost(params) { response ->
+			def slurper = new JsonSlurper();
 
-        // If we didn't get an authToken
-        if (!state.authToken) {
-            return false
-        }
-	} else {
-    	return false
-    }
+			response.data.each {key, value ->
+				def data = slurper.parseText(key);
+				// log.debug "Data: $data"
+
+				state.refreshToken = data.refresh_token
+				state.accessToken = data.access_token
+				state.tokenExpires = now() + (data.expires_in * 1000)
+				return true
+			}
+
+		}
+	} catch (Exception e) {
+		log.debug "Error: $e"
+	}
+
+	// We didn't get an access token
+	if ( !state.accessToken ) {
+		return false
+	}
 }
 
 String toQueryString(Map m) {
@@ -344,23 +343,23 @@ def initialize() {
 		try {
 			switch(detail?.type) {
 				case 'NAMain':
-					log.debug "Creating Base station"
+					log.debug "Creating Base station, DeviceID: ${deviceId} Device name: ${detail.module_name}"
 					createChildDevice("Netatmo Basestation", deviceId, "${detail.type}.${deviceId}", detail.module_name)
 					break
 				case 'NAModule1':
-					log.debug "Creating Outdoor module"
+					log.debug "Creating Outdoor module, DeviceID: ${deviceId} Device name: ${detail.module_name}"
 					createChildDevice("Netatmo Outdoor Module", deviceId, "${detail.type}.${deviceId}", detail.module_name)
 					break
 				case 'NAModule3':
-					log.debug "Creating Rain Gauge"
+					log.debug "Creating Rain Gauge, DeviceID: ${deviceId} Device name: ${detail.module_name}"
 					createChildDevice("Netatmo Rain", deviceId, "${detail.type}.${deviceId}", detail.module_name)
 					break
 				case 'NAModule4':
-					log.debug "Creating Additional module"
+					log.debug "Creating Additional module, DeviceID: ${deviceId} Device name: ${detail.module_name}"
 					createChildDevice("Netatmo Additional Module", deviceId, "${detail.type}.${deviceId}", detail.module_name)
 					break
                 case 'NAModule2':
-					log.debug "Creating Wind module"
+					log.debug "Creating Wind module, DeviceID: ${deviceId} Device name: ${detail.module_name}"
 					createChildDevice("Netatmo Wind", deviceId, "${detail.type}.${deviceId}", detail.module_name)
 					break
 			}
@@ -374,6 +373,8 @@ def initialize() {
 	log.debug "Delete: $delete"
 	delete.each { deleteChildDevice(it.deviceNetworkId) }
 
+	// check if user has set location
+    checkloc()
 	// Do the initial poll
 	poll()
 	// Schedule it to run every 5 minutes
@@ -467,7 +468,7 @@ def createChildDevice(deviceFile, dni, name, label) {
 }
 
 def listDevices() {
-	log.debug "Listing devices"
+	log.debug "Listing devices $devices "
 
 	def devices = getDeviceList()
 
@@ -523,11 +524,9 @@ def poll() {
 	log.debug "Polling"
 	getDeviceList();
 	def children = getChildDevices()
-    //log.debug "State: ${state.deviceState}"
-    //log.debug "Time Zone: ${location.timeZone}"
-    
-    if(location.timeZone == null)
-       log.warn "Location is not set! Go to your ST app and set your location"
+    log.debug "State: ${state.deviceState}"
+    log.debug "Time Zone: ${location.timeZone}"
+     
 
 	settings.devices.each { deviceId ->
 		def detail = state?.deviceDetail[deviceId]
@@ -667,13 +666,18 @@ def windToPrefUnits(Wind) {
     }
 }
 def lastUpdated(time) {
-    if(settings.time == '24') {
-    def updtTime = new Date(time*1000L).format("HH:mm", location.timeZone)
-    state.lastUpdated = updtTime
+	if(location.timeZone == null) {
+    log.warn "Time Zone is not set, time will be in UTC. Go to your ST app and set your hub location to get local time!"    
+    	def updtTime = new Date(time*1000L).format("HH:mm")
+    	state.lastUpdated = updtTime
+    return updtTime + " UTC"   
+    } else if(settings.time == '24') {
+    	def updtTime = new Date(time*1000L).format("HH:mm", location.timeZone)
+    	state.lastUpdated = updtTime
     return updtTime
-    } else {
-    def updtTime = new Date(time*1000L).format("h:mm aa", location.timeZone)
-    state.lastUpdated = updtTime
+    } else if(settings.time == '12') {
+    	def updtTime = new Date(time*1000L).format("h:mm aa", location.timeZone)
+    	state.lastUpdated = updtTime
     return updtTime
     }
 }
@@ -729,6 +733,13 @@ def noiseTosound(Noise) {
     	return "not detected"
     }
 }
+
+def checkloc() {
+
+    if(location.timeZone == null)
+		sendPush("Netatmo: Time Zone is not set, time will be in UTC. Go to your ST app and set your hub location to get local time!")
+}        
+        
 
 def debugEvent(message, displayEvent) {
 
